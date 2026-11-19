@@ -1,28 +1,257 @@
 ﻿job_id,posted_date,year_month,title,role_group,location,experience_years,salary_avg,skill_python,skill_sql,skill_java,skill_javascript,skill_pandas_numpy,skill_docker,skill_git,skill_aws_cloud
-1,2026-01-05,2026-01,Python Backend Developer,Backend,TP.HCM,2,21500000.0,1,1,0,0,0,1,1,0
-2,2026-01-12,2026-01,Data Analyst,Data / BI,TP.HCM,1,17000000.0,1,1,0,0,1,0,0,0
-3,2026-01-18,2026-01,Frontend React Developer,Frontend,Hà Nội,2,19000000.0,0,0,0,1,0,0,1,0
-4,2026-01-24,2026-01,Java Software Engineer,Backend,TP.HCM,3,27000000.0,0,1,1,0,0,1,0,1
-5,2026-02-08,2026-02,Junior Data Scientist,Data / BI,TP.HCM,1,18000000.0,1,1,0,0,1,0,0,0
-6,2026-02-19,2026-02,QA Automation Engineer,QA / Tester,Đà Nẵng,2,15500000.0,1,0,1,0,0,0,1,0
-7,2026-03-03,2026-03,Senior Backend Engineer,Backend,TP.HCM,4,34000000.0,1,1,1,0,0,1,1,1
-8,2026-03-09,2026-03,Data Engineer,Data / BI,Hà Nội,2,24000000.0,1,1,0,0,1,0,0,1
-9,2026-03-15,2026-03,Frontend Developer,Frontend,TP.HCM,1,15000000.0,0,0,0,1,0,0,1,0
-10,2026-03-21,2026-03,Backend Python Developer,Backend,TP.HCM,2,22500000.0,1,1,0,0,0,1,1,0
-11,2026-03-27,2026-03,BI Data Analyst,Data / BI,TP.HCM,2,19500000.0,1,1,0,0,1,0,0,0
-12,2026-04-04,2026-04,Java Backend Developer,Backend,Hà Nội,3,27000000.0,0,1,1,0,0,1,1,0
-13,2026-04-10,2026-04,Data Scientist,Data / BI,TP.HCM,2,25500000.0,1,1,0,0,1,0,0,1
-14,2026-04-16,2026-04,Fullstack JS Developer,Other IT,TP.HCM,2,21500000.0,0,1,0,1,0,1,1,0
-15,2026-04-22,2026-04,QA Tester,QA / Tester,Hà Nội,1,13000000.0,0,1,0,0,0,0,1,0
-16,2026-04-28,2026-04,Python Data Analyst,Data / BI,TP.HCM,1,16500000.0,1,1,0,0,1,0,0,0
-17,2026-05-05,2026-05,Backend Engineer,Backend,TP.HCM,3,29000000.0,1,1,1,0,0,1,1,1
-18,2026-05-11,2026-05,Data Analyst,Data / BI,TP.HCM,2,20500000.0,1,1,0,0,1,0,0,0
-19,2026-05-17,2026-05,Frontend Engineer,Frontend,Hà Nội,2,19000000.0,0,0,0,1,0,0,1,0
-20,2026-05-23,2026-05,Cloud Backend Developer,Backend,TP.HCM,3,30000000.0,1,1,0,0,0,1,1,1
-21,2026-05-29,2026-05,Data Engineer,Data / BI,TP.HCM,3,30500000.0,1,1,0,0,1,1,0,1
-22,2026-06-03,2026-06,Senior Python Developer,Backend,TP.HCM,4,36000000.0,1,1,0,0,0,1,1,1
-23,2026-06-08,2026-06,Java Developer,Backend,TP.HCM,2,23500000.0,0,1,1,0,0,0,1,0
-24,2026-06-14,2026-06,Data Analyst,Data / BI,Hà Nội,1,17500000.0,1,1,0,0,1,0,0,0
-25,2026-06-19,2026-06,Frontend ReactJS,Frontend,TP.HCM,2,20000000.0,0,0,0,1,0,0,1,0
-26,2026-06-24,2026-06,Backend Node/Python,Backend,TP.HCM,2,22500000.0,1,1,0,1,0,1,1,0
-27,2026-06-29,2026-06,Data Scientist,Data / BI,TP.HCM,3,32000000.0,1,1,0,0,1,1,0,1
+1,2025-07-21,2025-07,Java Software Engineer,Backend,Yên Bái,3,28500000.0,0,1,1,0,0,1,1,1
+2,2025-07-08,2025-07,Data Analyst,Data / BI,Yên Bái,0,20000000.0,1,1,0,0,1,0,0,0
+3,2025-07-14,2025-07,Python Backend Developer,Backend,Vĩnh Phúc,2,23000000.0,1,1,0,0,0,1,1,0
+4,2025-07-17,2025-07,Cloud / DevOps Engineer,Other IT,Vĩnh Phúc,3,32500000.0,1,1,0,0,0,1,1,1
+5,2025-07-21,2025-07,Manual QA / QC Tester,QA / Tester,Vĩnh Long,2,14500000.0,0,1,0,0,0,0,1,0
+6,2025-07-09,2025-07,Python Backend Developer,Backend,Vĩnh Long,3,26000000.0,1,1,0,0,0,1,1,0
+7,2025-07-09,2025-07,Data Analyst,Data / BI,Tuyên Quang,1,21000000.0,1,1,0,0,1,0,0,0
+8,2025-07-03,2025-07,Fullstack JS Developer,Other IT,Tuyên Quang,2,22500000.0,0,1,0,1,0,1,1,0
+9,2025-07-09,2025-07,Python Backend Developer,Backend,Trà Vinh,1,27000000.0,1,1,0,0,0,1,1,0
+10,2025-07-13,2025-07,Java Software Engineer,Backend,Trà Vinh,3,29000000.0,0,1,1,0,0,1,1,1
+11,2025-07-07,2025-07,Java Software Engineer,Backend,TP. Hồ Chí Minh,3,30500000.0,0,1,1,0,0,1,1,1
+12,2025-07-10,2025-07,Java Software Engineer,Backend,TP. Hồ Chí Minh,2,31500000.0,0,1,1,0,0,1,1,1
+13,2025-07-09,2025-07,QA Automation Engineer,QA / Tester,Tiền Giang,2,22000000.0,1,1,1,0,0,0,1,0
+14,2025-07-12,2025-07,Frontend React Developer,Frontend,Tiền Giang,2,21000000.0,0,0,0,1,0,0,1,0
+15,2025-07-30,2025-07,Java Software Engineer,Backend,Thừa Thiên Huế,3,30500000.0,0,1,1,0,0,1,1,1
+16,2025-07-24,2025-07,Data Scientist,Data / BI,Thừa Thiên Huế,3,29500000.0,1,1,0,0,1,0,0,1
+17,2025-07-30,2025-07,Manual QA / QC Tester,QA / Tester,Thanh Hóa,1,15500000.0,0,1,0,0,0,0,1,0
+18,2025-07-25,2025-07,Python Backend Developer,Backend,Thanh Hóa,1,26500000.0,1,1,0,0,0,1,1,0
+19,2025-08-11,2025-08,Fullstack JS Developer,Other IT,Thái Nguyên,2,22500000.0,0,1,0,1,0,1,1,0
+20,2025-08-31,2025-08,Cloud / DevOps Engineer,Other IT,Thái Nguyên,3,34000000.0,1,1,0,0,0,1,1,1
+21,2025-08-16,2025-08,Fullstack JS Developer,Other IT,Thái Bình,2,25500000.0,0,1,0,1,0,1,1,0
+22,2025-08-05,2025-08,Data Scientist,Data / BI,Thái Bình,2,32000000.0,1,1,0,0,1,0,0,1
+23,2025-08-19,2025-08,Fullstack JS Developer,Other IT,Tây Ninh,2,25000000.0,0,1,0,1,0,1,1,0
+24,2025-08-05,2025-08,Manual QA / QC Tester,QA / Tester,Tây Ninh,0,14000000.0,0,1,0,0,0,0,1,0
+25,2025-08-04,2025-08,Data Analyst,Data / BI,Sơn La,2,20500000.0,1,1,0,0,1,0,0,0
+26,2025-08-03,2025-08,Fullstack JS Developer,Other IT,Sơn La,3,25000000.0,0,1,0,1,0,1,1,0
+27,2025-08-09,2025-08,Manual QA / QC Tester,QA / Tester,Sóc Trăng,0,15000000.0,0,1,0,0,0,0,1,0
+28,2025-08-29,2025-08,Manual QA / QC Tester,QA / Tester,Sóc Trăng,1,16500000.0,0,1,0,0,0,0,1,0
+29,2025-08-10,2025-08,Fullstack JS Developer,Other IT,Quảng Trị,1,23500000.0,0,1,0,1,0,1,1,0
+30,2025-08-29,2025-08,Data Engineer,Data / BI,Quảng Trị,3,34000000.0,1,1,0,0,1,1,1,1
+31,2025-08-30,2025-08,Java Software Engineer,Backend,Quảng Ninh,3,29500000.0,0,1,1,0,0,1,1,1
+32,2025-08-12,2025-08,Data Analyst,Data / BI,Quảng Ninh,0,22500000.0,1,1,0,0,1,0,0,0
+33,2025-08-11,2025-08,QA Automation Engineer,QA / Tester,Quảng Ngãi,2,16500000.0,1,1,1,0,0,0,1,0
+34,2025-08-27,2025-08,Data Engineer,Data / BI,Quảng Ngãi,3,29500000.0,1,1,0,0,1,1,1,1
+35,2025-08-19,2025-08,Java Software Engineer,Backend,Quảng Nam,4,28500000.0,0,1,1,0,0,1,1,1
+36,2025-08-03,2025-08,Manual QA / QC Tester,QA / Tester,Quảng Nam,2,13500000.0,0,1,0,0,0,0,1,0
+37,2025-08-06,2025-08,Data Engineer,Data / BI,Quảng Bình,4,34000000.0,1,1,0,0,1,1,1,1
+38,2025-08-30,2025-08,Manual QA / QC Tester,QA / Tester,Quảng Bình,1,17500000.0,0,1,0,0,0,0,1,0
+39,2025-09-10,2025-09,Fullstack JS Developer,Other IT,Phú Yên,2,26500000.0,0,1,0,1,0,1,1,0
+40,2025-09-29,2025-09,Manual QA / QC Tester,QA / Tester,Phú Yên,1,14000000.0,0,1,0,0,0,0,1,0
+41,2025-09-03,2025-09,Frontend React Developer,Frontend,Phú Thọ,2,20000000.0,0,0,0,1,0,0,1,0
+42,2025-09-08,2025-09,Python Backend Developer,Backend,Phú Thọ,1,25500000.0,1,1,0,0,0,1,1,0
+43,2025-09-03,2025-09,Python Backend Developer,Backend,Ninh Thuận,2,24000000.0,1,1,0,0,0,1,1,0
+44,2025-09-22,2025-09,QA Automation Engineer,QA / Tester,Ninh Thuận,2,19000000.0,1,1,1,0,0,0,1,0
+45,2025-09-30,2025-09,Cloud / DevOps Engineer,Other IT,Ninh Bình,3,34000000.0,1,1,0,0,0,1,1,1
+46,2025-09-16,2025-09,Fullstack JS Developer,Other IT,Ninh Bình,1,22000000.0,0,1,0,1,0,1,1,0
+47,2025-09-14,2025-09,Frontend React Developer,Frontend,Nghệ An,3,21000000.0,0,0,0,1,0,0,1,0
+48,2025-09-24,2025-09,Python Backend Developer,Backend,Nghệ An,1,28000000.0,1,1,0,0,0,1,1,0
+49,2025-09-13,2025-09,Frontend React Developer,Frontend,Nam Định,2,18500000.0,0,0,0,1,0,0,1,0
+50,2025-09-18,2025-09,QA Automation Engineer,QA / Tester,Nam Định,2,18500000.0,1,1,1,0,0,0,1,0
+51,2025-09-15,2025-09,Data Scientist,Data / BI,Long An,1,29000000.0,1,1,0,0,1,0,0,1
+52,2025-09-21,2025-09,Manual QA / QC Tester,QA / Tester,Long An,1,12500000.0,0,1,0,0,0,0,1,0
+53,2025-09-14,2025-09,QA Automation Engineer,QA / Tester,Lào Cai,3,18500000.0,1,1,1,0,0,0,1,0
+54,2025-09-02,2025-09,Data Analyst,Data / BI,Lào Cai,2,19000000.0,1,1,0,0,1,0,0,0
+55,2025-09-30,2025-09,QA Automation Engineer,QA / Tester,Lạng Sơn,3,19000000.0,1,1,1,0,0,0,1,0
+56,2025-09-07,2025-09,Data Engineer,Data / BI,Lạng Sơn,2,29500000.0,1,1,0,0,1,1,1,1
+57,2025-09-11,2025-09,Python Backend Developer,Backend,Lâm Đồng,3,25000000.0,1,1,0,0,0,1,1,0
+58,2025-09-30,2025-09,Manual QA / QC Tester,QA / Tester,Lâm Đồng,0,13000000.0,0,1,0,0,0,0,1,0
+59,2025-09-06,2025-09,Java Software Engineer,Backend,Lai Châu,3,28000000.0,0,1,1,0,0,1,1,1
+60,2025-09-04,2025-09,Cloud / DevOps Engineer,Other IT,Lai Châu,2,33000000.0,1,1,0,0,0,1,1,1
+61,2025-10-03,2025-10,Fullstack JS Developer,Other IT,Kon Tum,2,26000000.0,0,1,0,1,0,1,1,0
+62,2025-10-09,2025-10,Data Scientist,Data / BI,Kon Tum,2,32500000.0,1,1,0,0,1,0,0,1
+63,2025-10-09,2025-10,Fullstack JS Developer,Other IT,Kiên Giang,2,24500000.0,0,1,0,1,0,1,1,0
+64,2025-10-11,2025-10,Java Software Engineer,Backend,Kiên Giang,2,27500000.0,0,1,1,0,0,1,1,1
+65,2025-10-18,2025-10,Data Scientist,Data / BI,Khánh Hòa,2,30500000.0,1,1,0,0,1,0,0,1
+66,2025-10-12,2025-10,Java Software Engineer,Backend,Khánh Hòa,3,27500000.0,0,1,1,0,0,1,1,1
+67,2025-10-15,2025-10,Manual QA / QC Tester,QA / Tester,Hưng Yên,0,16000000.0,0,1,0,0,0,0,1,0
+68,2025-10-27,2025-10,Manual QA / QC Tester,QA / Tester,Hưng Yên,0,16000000.0,0,1,0,0,0,0,1,0
+69,2025-10-05,2025-10,Data Engineer,Data / BI,Hòa Bình,3,29000000.0,1,1,0,0,1,1,1,1
+70,2025-10-10,2025-10,Cloud / DevOps Engineer,Other IT,Hòa Bình,3,33500000.0,1,1,0,0,0,1,1,1
+71,2025-10-22,2025-10,Data Engineer,Data / BI,Hậu Giang,3,32500000.0,1,1,0,0,1,1,1,1
+72,2025-10-30,2025-10,Python Backend Developer,Backend,Hậu Giang,3,25500000.0,1,1,0,0,0,1,1,0
+73,2025-10-09,2025-10,Python Backend Developer,Backend,Hải Phòng,2,24000000.0,1,1,0,0,0,1,1,0
+74,2025-10-09,2025-10,Data Analyst,Data / BI,Hải Phòng,2,21500000.0,1,1,0,0,1,0,0,0
+75,2025-10-01,2025-10,Java Software Engineer,Backend,Hải Dương,3,28500000.0,0,1,1,0,0,1,1,1
+76,2025-10-02,2025-10,Frontend React Developer,Frontend,Hải Dương,2,22000000.0,0,0,0,1,0,0,1,0
+77,2025-10-05,2025-10,Python Backend Developer,Backend,Hà Tĩnh,1,25000000.0,1,1,0,0,0,1,1,0
+78,2025-10-12,2025-10,Data Scientist,Data / BI,Hà Tĩnh,1,30500000.0,1,1,0,0,1,0,0,1
+79,2025-10-25,2025-10,Manual QA / QC Tester,QA / Tester,Hà Nội,1,18000000.0,0,1,0,0,0,0,1,0
+80,2025-10-30,2025-10,Data Scientist,Data / BI,Hà Nội,2,33000000.0,1,1,0,0,1,0,0,1
+81,2025-10-14,2025-10,Python Backend Developer,Backend,Hà Nam,2,26000000.0,1,1,0,0,0,1,1,0
+82,2025-10-30,2025-10,Fullstack JS Developer,Other IT,Hà Nam,2,27000000.0,0,1,0,1,0,1,1,0
+83,2025-10-06,2025-10,Java Software Engineer,Backend,Hà Giang,2,30500000.0,0,1,1,0,0,1,1,1
+84,2025-10-16,2025-10,Data Scientist,Data / BI,Hà Giang,3,31000000.0,1,1,0,0,1,0,0,1
+85,2025-11-10,2025-11,Data Scientist,Data / BI,Gia Lai,2,28000000.0,1,1,0,0,1,0,0,1
+86,2025-11-11,2025-11,Data Engineer,Data / BI,Gia Lai,3,32000000.0,1,1,0,0,1,1,1,1
+87,2025-11-21,2025-11,Manual QA / QC Tester,QA / Tester,Đồng Tháp,1,16500000.0,0,1,0,0,0,0,1,0
+88,2025-11-04,2025-11,Data Engineer,Data / BI,Đồng Tháp,3,31500000.0,1,1,0,0,1,1,1,1
+89,2025-11-04,2025-11,Cloud / DevOps Engineer,Other IT,Đồng Nai,3,33000000.0,1,1,0,0,0,1,1,1
+90,2025-11-20,2025-11,Manual QA / QC Tester,QA / Tester,Đồng Nai,1,14000000.0,0,1,0,0,0,0,1,0
+91,2025-11-02,2025-11,Fullstack JS Developer,Other IT,Điện Biên,2,23500000.0,0,1,0,1,0,1,1,0
+92,2025-11-14,2025-11,Java Software Engineer,Backend,Điện Biên,3,29500000.0,0,1,1,0,0,1,1,1
+93,2025-11-28,2025-11,Java Software Engineer,Backend,Đắk Nông,3,29500000.0,0,1,1,0,0,1,1,1
+94,2025-11-14,2025-11,Frontend React Developer,Frontend,Đắk Nông,2,22000000.0,0,0,0,1,0,0,1,0
+95,2025-11-05,2025-11,Data Scientist,Data / BI,Đắk Lắk,3,31500000.0,1,1,0,0,1,0,0,1
+96,2025-11-24,2025-11,Data Analyst,Data / BI,Đắk Lắk,1,21500000.0,1,1,0,0,1,0,0,0
+97,2025-11-18,2025-11,Python Backend Developer,Backend,Đà Nẵng,2,25000000.0,1,1,0,0,0,1,1,0
+98,2025-11-26,2025-11,Cloud / DevOps Engineer,Other IT,Đà Nẵng,3,35000000.0,1,1,0,0,0,1,1,1
+99,2025-11-15,2025-11,QA Automation Engineer,QA / Tester,Cần Thơ,3,19500000.0,1,1,1,0,0,0,1,0
+100,2025-11-29,2025-11,Data Analyst,Data / BI,Cần Thơ,1,20000000.0,1,1,0,0,1,0,0,0
+101,2025-11-22,2025-11,Cloud / DevOps Engineer,Other IT,Cao Bằng,3,31500000.0,1,1,0,0,0,1,1,1
+102,2025-11-10,2025-11,Data Scientist,Data / BI,Cao Bằng,1,28500000.0,1,1,0,0,1,0,0,1
+103,2025-11-08,2025-11,QA Automation Engineer,QA / Tester,Cà Mau,1,21500000.0,1,1,1,0,0,0,1,0
+104,2025-11-14,2025-11,Cloud / DevOps Engineer,Other IT,Cà Mau,4,33500000.0,1,1,0,0,0,1,1,1
+105,2025-11-13,2025-11,Data Scientist,Data / BI,Bình Thuận,1,30500000.0,1,1,0,0,1,0,0,1
+106,2025-11-25,2025-11,Java Software Engineer,Backend,Bình Thuận,3,28000000.0,0,1,1,0,0,1,1,1
+107,2025-11-23,2025-11,Manual QA / QC Tester,QA / Tester,Bình Phước,1,14000000.0,0,1,0,0,0,0,1,0
+108,2025-12-28,2025-12,Java Software Engineer,Backend,Bình Phước,4,28000000.0,0,1,1,0,0,1,1,1
+109,2025-12-17,2025-12,Manual QA / QC Tester,QA / Tester,Bình Dương,2,15500000.0,0,1,0,0,0,0,1,0
+110,2025-12-27,2025-12,Manual QA / QC Tester,QA / Tester,Bình Dương,2,17000000.0,0,1,0,0,0,0,1,0
+111,2025-12-06,2025-12,QA Automation Engineer,QA / Tester,Bình Định,2,19000000.0,1,1,1,0,0,0,1,0
+112,2025-12-21,2025-12,Data Engineer,Data / BI,Bình Định,3,32500000.0,1,1,0,0,1,1,1,1
+113,2025-12-15,2025-12,Java Software Engineer,Backend,Bến Tre,3,29500000.0,0,1,1,0,0,1,1,1
+114,2025-12-11,2025-12,Frontend React Developer,Frontend,Bến Tre,2,20000000.0,0,0,0,1,0,0,1,0
+115,2025-12-08,2025-12,Fullstack JS Developer,Other IT,Bắc Ninh,2,24500000.0,0,1,0,1,0,1,1,0
+116,2025-12-14,2025-12,Fullstack JS Developer,Other IT,Bắc Ninh,3,24500000.0,0,1,0,1,0,1,1,0
+117,2025-12-02,2025-12,Data Scientist,Data / BI,Bạc Liêu,1,30500000.0,1,1,0,0,1,0,0,1
+118,2025-12-29,2025-12,Cloud / DevOps Engineer,Other IT,Bạc Liêu,2,33500000.0,1,1,0,0,0,1,1,1
+119,2025-12-10,2025-12,Fullstack JS Developer,Other IT,Bắc Kạn,2,25000000.0,0,1,0,1,0,1,1,0
+120,2025-12-08,2025-12,Data Engineer,Data / BI,Bắc Kạn,2,32000000.0,1,1,0,0,1,1,1,1
+121,2025-12-11,2025-12,Fullstack JS Developer,Other IT,Bắc Giang,3,24500000.0,0,1,0,1,0,1,1,0
+122,2025-12-05,2025-12,Cloud / DevOps Engineer,Other IT,Bắc Giang,4,32500000.0,1,1,0,0,0,1,1,1
+123,2025-12-19,2025-12,Python Backend Developer,Backend,Bà Rịa - Vũng Tàu,3,25500000.0,1,1,0,0,0,1,1,0
+124,2025-12-28,2025-12,QA Automation Engineer,QA / Tester,Bà Rịa - Vũng Tàu,2,17000000.0,1,1,1,0,0,0,1,0
+125,2025-12-11,2025-12,Data Scientist,Data / BI,An Giang,2,30000000.0,1,1,0,0,1,0,0,1
+126,2025-12-29,2025-12,Fullstack JS Developer,Other IT,An Giang,3,25500000.0,0,1,0,1,0,1,1,0
+127,2026-01-27,2026-01,Java Software Engineer,Backend,Hà Nội,2,32500000.0,0,1,1,0,0,1,1,1
+128,2026-01-08,2026-01,Java Software Engineer,Backend,Tây Ninh,2,28500000.0,0,1,1,0,0,1,1,1
+129,2026-01-07,2026-01,Python Backend Developer,Backend,Lâm Đồng,3,24000000.0,1,1,0,0,0,1,1,0
+130,2026-01-04,2026-01,Cloud / DevOps Engineer,Other IT,TP. Hồ Chí Minh,3,36500000.0,1,1,0,0,0,1,1,1
+131,2026-01-12,2026-01,Data Analyst,Data / BI,Lai Châu,0,22500000.0,1,1,0,0,1,0,0,0
+132,2026-01-27,2026-01,Data Analyst,Data / BI,Tuyên Quang,0,19500000.0,1,1,0,0,1,0,0,0
+133,2026-01-10,2026-01,Cloud / DevOps Engineer,Other IT,Ninh Bình,3,33500000.0,1,1,0,0,0,1,1,1
+134,2026-01-19,2026-01,Data Scientist,Data / BI,Bình Định,1,31500000.0,1,1,0,0,1,0,0,1
+135,2026-01-19,2026-01,Python Backend Developer,Backend,Gia Lai,2,27000000.0,1,1,0,0,0,1,1,0
+136,2026-01-17,2026-01,Frontend React Developer,Frontend,Bà Rịa - Vũng Tàu,3,22500000.0,0,0,0,1,0,0,1,0
+137,2026-01-14,2026-01,Frontend React Developer,Frontend,Lào Cai,2,22000000.0,0,0,0,1,0,0,1,0
+138,2026-01-06,2026-01,Manual QA / QC Tester,QA / Tester,Tuyên Quang,2,15500000.0,0,1,0,0,0,0,1,0
+139,2026-01-14,2026-01,Cloud / DevOps Engineer,Other IT,Đắk Lắk,2,34000000.0,1,1,0,0,0,1,1,1
+140,2026-01-29,2026-01,QA Automation Engineer,QA / Tester,Đà Nẵng,3,20000000.0,1,1,1,0,0,0,1,0
+141,2026-01-01,2026-01,QA Automation Engineer,QA / Tester,TP. Hồ Chí Minh,2,20500000.0,1,1,1,0,0,0,1,0
+142,2026-01-26,2026-01,Data Engineer,Data / BI,Gia Lai,3,33500000.0,1,1,0,0,1,1,1,1
+143,2026-01-01,2026-01,Manual QA / QC Tester,QA / Tester,TP. Hồ Chí Minh,2,15000000.0,0,1,0,0,0,0,1,0
+144,2026-01-18,2026-01,Data Scientist,Data / BI,Phú Thọ,3,32500000.0,1,1,0,0,1,0,0,1
+145,2026-01-26,2026-01,Python Backend Developer,Backend,Bến Tre,2,25000000.0,1,1,0,0,0,1,1,0
+146,2026-01-22,2026-01,Cloud / DevOps Engineer,Other IT,Hà Nội,3,36500000.0,1,1,0,0,0,1,1,1
+147,2026-01-24,2026-01,Manual QA / QC Tester,QA / Tester,Đồng Tháp,1,16500000.0,0,1,0,0,0,0,1,0
+148,2026-02-09,2026-02,Data Scientist,Data / BI,Bình Dương,1,29000000.0,1,1,0,0,1,0,0,1
+149,2026-02-18,2026-02,Data Analyst,Data / BI,Cần Thơ,1,21500000.0,1,1,0,0,1,0,0,0
+150,2026-02-19,2026-02,Manual QA / QC Tester,QA / Tester,Kon Tum,1,15500000.0,0,1,0,0,0,0,1,0
+151,2026-02-08,2026-02,Frontend React Developer,Frontend,Cao Bằng,2,20500000.0,0,0,0,1,0,0,1,0
+152,2026-02-02,2026-02,Python Backend Developer,Backend,Hậu Giang,3,26000000.0,1,1,0,0,0,1,1,0
+153,2026-02-28,2026-02,Python Backend Developer,Backend,Khánh Hòa,3,26000000.0,1,1,0,0,0,1,1,0
+154,2026-02-06,2026-02,Python Backend Developer,Backend,Đà Nẵng,1,24500000.0,1,1,0,0,0,1,1,0
+155,2026-02-16,2026-02,Java Software Engineer,Backend,Khánh Hòa,3,28500000.0,0,1,1,0,0,1,1,1
+156,2026-02-26,2026-02,Cloud / DevOps Engineer,Other IT,TP. Hồ Chí Minh,2,33000000.0,1,1,0,0,0,1,1,1
+157,2026-03-25,2026-03,Fullstack JS Developer,Other IT,Lai Châu,3,24000000.0,0,1,0,1,0,1,1,0
+158,2026-03-30,2026-03,QA Automation Engineer,QA / Tester,Đồng Nai,2,20000000.0,1,1,1,0,0,0,1,0
+159,2026-03-20,2026-03,Python Backend Developer,Backend,Lai Châu,2,25500000.0,1,1,0,0,0,1,1,0
+160,2026-03-07,2026-03,Data Engineer,Data / BI,Nghệ An,3,30000000.0,1,1,0,0,1,1,1,1
+161,2026-03-03,2026-03,Data Analyst,Data / BI,An Giang,2,21500000.0,1,1,0,0,1,0,0,0
+162,2026-03-02,2026-03,Data Scientist,Data / BI,Điện Biên,3,31000000.0,1,1,0,0,1,0,0,1
+163,2026-03-22,2026-03,Data Scientist,Data / BI,TP. Hồ Chí Minh,2,34000000.0,1,1,0,0,1,0,0,1
+164,2026-03-04,2026-03,Manual QA / QC Tester,QA / Tester,Đà Nẵng,1,14000000.0,0,1,0,0,0,0,1,0
+165,2026-03-02,2026-03,Data Analyst,Data / BI,Thái Bình,1,22000000.0,1,1,0,0,1,0,0,0
+166,2026-03-04,2026-03,QA Automation Engineer,QA / Tester,Ninh Thuận,2,20500000.0,1,1,1,0,0,0,1,0
+167,2026-03-18,2026-03,QA Automation Engineer,QA / Tester,Hà Nội,3,20500000.0,1,1,1,0,0,0,1,0
+168,2026-03-11,2026-03,Cloud / DevOps Engineer,Other IT,Đà Nẵng,2,31000000.0,1,1,0,0,0,1,1,1
+169,2026-03-22,2026-03,Data Engineer,Data / BI,Khánh Hòa,4,31000000.0,1,1,0,0,1,1,1,1
+170,2026-03-09,2026-03,Data Analyst,Data / BI,Yên Bái,2,21500000.0,1,1,0,0,1,0,0,0
+171,2026-03-16,2026-03,Frontend React Developer,Frontend,Hà Nội,1,23500000.0,0,0,0,1,0,0,1,0
+172,2026-03-06,2026-03,Frontend React Developer,Frontend,Hà Nội,3,22500000.0,0,0,0,1,0,0,1,0
+173,2026-03-25,2026-03,Manual QA / QC Tester,QA / Tester,Bắc Kạn,1,13500000.0,0,1,0,0,0,0,1,0
+174,2026-03-04,2026-03,Fullstack JS Developer,Other IT,TP. Hồ Chí Minh,3,26000000.0,0,1,0,1,0,1,1,0
+175,2026-03-02,2026-03,Data Scientist,Data / BI,Hải Phòng,3,32500000.0,1,1,0,0,1,0,0,1
+176,2026-03-15,2026-03,Python Backend Developer,Backend,Cần Thơ,2,25500000.0,1,1,0,0,0,1,1,0
+177,2026-03-29,2026-03,QA Automation Engineer,QA / Tester,Bình Dương,2,21000000.0,1,1,1,0,0,0,1,0
+178,2026-03-06,2026-03,Data Engineer,Data / BI,Hậu Giang,2,32500000.0,1,1,0,0,1,1,1,1
+179,2026-03-27,2026-03,Java Software Engineer,Backend,Hà Nội,3,30500000.0,0,1,1,0,0,1,1,1
+180,2026-03-30,2026-03,Data Engineer,Data / BI,Hải Phòng,4,31500000.0,1,1,0,0,1,1,1,1
+181,2026-03-08,2026-03,QA Automation Engineer,QA / Tester,Hậu Giang,2,18500000.0,1,1,1,0,0,0,1,0
+182,2026-04-03,2026-04,Data Engineer,Data / BI,Sơn La,3,31500000.0,1,1,0,0,1,1,1,1
+183,2026-04-01,2026-04,Data Engineer,Data / BI,Quảng Nam,4,33000000.0,1,1,0,0,1,1,1,1
+184,2026-04-05,2026-04,QA Automation Engineer,QA / Tester,Hải Phòng,3,18500000.0,1,1,1,0,0,0,1,0
+185,2026-04-30,2026-04,Frontend React Developer,Frontend,TP. Hồ Chí Minh,3,23000000.0,0,0,0,1,0,0,1,0
+186,2026-04-28,2026-04,Fullstack JS Developer,Other IT,Bạc Liêu,3,25500000.0,0,1,0,1,0,1,1,0
+187,2026-04-22,2026-04,Data Analyst,Data / BI,Hải Dương,1,18000000.0,1,1,0,0,1,0,0,0
+188,2026-04-04,2026-04,QA Automation Engineer,QA / Tester,Bình Định,2,18000000.0,1,1,1,0,0,0,1,0
+189,2026-04-28,2026-04,Data Analyst,Data / BI,Bắc Ninh,2,19500000.0,1,1,0,0,1,0,0,0
+190,2026-04-03,2026-04,Frontend React Developer,Frontend,TP. Hồ Chí Minh,2,23500000.0,0,0,0,1,0,0,1,0
+191,2026-04-23,2026-04,QA Automation Engineer,QA / Tester,TP. Hồ Chí Minh,1,20500000.0,1,1,1,0,0,0,1,0
+192,2026-04-21,2026-04,Data Engineer,Data / BI,Yên Bái,4,31500000.0,1,1,0,0,1,1,1,1
+193,2026-04-25,2026-04,Java Software Engineer,Backend,Hà Nội,2,31500000.0,0,1,1,0,0,1,1,1
+194,2026-04-11,2026-04,Python Backend Developer,Backend,Đồng Nai,2,25500000.0,1,1,0,0,0,1,1,0
+195,2026-04-17,2026-04,Fullstack JS Developer,Other IT,Hưng Yên,2,22500000.0,0,1,0,1,0,1,1,0
+196,2026-04-20,2026-04,Fullstack JS Developer,Other IT,Lâm Đồng,2,23500000.0,0,1,0,1,0,1,1,0
+197,2026-04-15,2026-04,Data Engineer,Data / BI,Hà Nội,4,33500000.0,1,1,0,0,1,1,1,1
+198,2026-04-10,2026-04,Manual QA / QC Tester,QA / Tester,Bình Thuận,1,15000000.0,0,1,0,0,0,0,1,0
+199,2026-04-14,2026-04,Data Engineer,Data / BI,Hà Nội,4,32500000.0,1,1,0,0,1,1,1,1
+200,2026-04-16,2026-04,Java Software Engineer,Backend,Đà Nẵng,3,29000000.0,0,1,1,0,0,1,1,1
+201,2026-04-10,2026-04,Python Backend Developer,Backend,Vĩnh Long,2,27000000.0,1,1,0,0,0,1,1,0
+202,2026-04-19,2026-04,Python Backend Developer,Backend,TP. Hồ Chí Minh,2,29000000.0,1,1,0,0,0,1,1,0
+203,2026-04-26,2026-04,Data Scientist,Data / BI,Lai Châu,2,29000000.0,1,1,0,0,1,0,0,1
+204,2026-04-09,2026-04,Data Analyst,Data / BI,Lạng Sơn,0,22500000.0,1,1,0,0,1,0,0,0
+205,2026-04-26,2026-04,QA Automation Engineer,QA / Tester,Bắc Kạn,2,20000000.0,1,1,1,0,0,0,1,0
+206,2026-05-30,2026-05,Data Engineer,Data / BI,Đồng Nai,3,31000000.0,1,1,0,0,1,1,1,1
+207,2026-05-26,2026-05,Manual QA / QC Tester,QA / Tester,TP. Hồ Chí Minh,1,17500000.0,0,1,0,0,0,0,1,0
+208,2026-05-06,2026-05,Data Engineer,Data / BI,TP. Hồ Chí Minh,3,35500000.0,1,1,0,0,1,1,1,1
+209,2026-05-28,2026-05,Frontend React Developer,Frontend,Thái Nguyên,2,19500000.0,0,0,0,1,0,0,1,0
+210,2026-05-31,2026-05,Data Scientist,Data / BI,TP. Hồ Chí Minh,3,34500000.0,1,1,0,0,1,0,0,1
+211,2026-05-26,2026-05,Manual QA / QC Tester,QA / Tester,Hà Nam,1,14000000.0,0,1,0,0,0,0,1,0
+212,2026-05-04,2026-05,QA Automation Engineer,QA / Tester,Hà Nam,2,21500000.0,1,1,1,0,0,0,1,0
+213,2026-05-13,2026-05,Frontend React Developer,Frontend,Bình Dương,1,20000000.0,0,0,0,1,0,0,1,0
+214,2026-05-29,2026-05,Manual QA / QC Tester,QA / Tester,Đồng Nai,0,15000000.0,0,1,0,0,0,0,1,0
+215,2026-05-27,2026-05,QA Automation Engineer,QA / Tester,TP. Hồ Chí Minh,3,22000000.0,1,1,1,0,0,0,1,0
+216,2026-05-05,2026-05,Python Backend Developer,Backend,TP. Hồ Chí Minh,1,27500000.0,1,1,0,0,0,1,1,0
+217,2026-05-08,2026-05,Manual QA / QC Tester,QA / Tester,Bình Dương,2,15000000.0,0,1,0,0,0,0,1,0
+218,2026-05-24,2026-05,Data Analyst,Data / BI,TP. Hồ Chí Minh,2,22000000.0,1,1,0,0,1,0,0,0
+219,2026-05-14,2026-05,Data Engineer,Data / BI,Bắc Kạn,4,30500000.0,1,1,0,0,1,1,1,1
+220,2026-05-31,2026-05,Data Scientist,Data / BI,TP. Hồ Chí Minh,2,32000000.0,1,1,0,0,1,0,0,1
+221,2026-05-29,2026-05,Frontend React Developer,Frontend,Bắc Ninh,1,19500000.0,0,0,0,1,0,0,1,0
+222,2026-05-27,2026-05,QA Automation Engineer,QA / Tester,Bến Tre,1,19500000.0,1,1,1,0,0,0,1,0
+223,2026-05-26,2026-05,Frontend React Developer,Frontend,Đà Nẵng,2,21500000.0,0,0,0,1,0,0,1,0
+224,2026-05-27,2026-05,Manual QA / QC Tester,QA / Tester,Cần Thơ,1,16000000.0,0,1,0,0,0,0,1,0
+225,2026-05-25,2026-05,Data Analyst,Data / BI,Thái Bình,1,19500000.0,1,1,0,0,1,0,0,0
+226,2026-05-05,2026-05,Data Analyst,Data / BI,Hải Phòng,0,18000000.0,1,1,0,0,1,0,0,0
+227,2026-05-01,2026-05,Frontend React Developer,Frontend,Thái Bình,2,20500000.0,0,0,0,1,0,0,1,0
+228,2026-05-06,2026-05,Data Engineer,Data / BI,Bắc Ninh,2,33000000.0,1,1,0,0,1,1,1,1
+229,2026-05-03,2026-05,QA Automation Engineer,QA / Tester,Hà Nội,1,21500000.0,1,1,1,0,0,0,1,0
+230,2026-05-17,2026-05,Data Scientist,Data / BI,TP. Hồ Chí Minh,2,32000000.0,1,1,0,0,1,0,0,1
+231,2026-05-21,2026-05,Python Backend Developer,Backend,Bắc Ninh,3,27500000.0,1,1,0,0,0,1,1,0
+232,2026-06-22,2026-06,Java Software Engineer,Backend,Hà Tĩnh,2,27500000.0,0,1,1,0,0,1,1,1
+233,2026-06-20,2026-06,Data Analyst,Data / BI,Bắc Ninh,1,20500000.0,1,1,0,0,1,0,0,0
+234,2026-06-20,2026-06,Manual QA / QC Tester,QA / Tester,Đồng Nai,2,16500000.0,0,1,0,0,0,0,1,0
+235,2026-06-26,2026-06,Java Software Engineer,Backend,TP. Hồ Chí Minh,3,33500000.0,0,1,1,0,0,1,1,1
+236,2026-06-15,2026-06,Data Scientist,Data / BI,Hà Nội,3,32500000.0,1,1,0,0,1,0,0,1
+237,2026-06-04,2026-06,Frontend React Developer,Frontend,Hà Nội,2,23500000.0,0,0,0,1,0,0,1,0
+238,2026-06-22,2026-06,QA Automation Engineer,QA / Tester,Bắc Ninh,3,16500000.0,1,1,1,0,0,0,1,0
+239,2026-06-24,2026-06,Frontend React Developer,Frontend,Thanh Hóa,2,20000000.0,0,0,0,1,0,0,1,0
+240,2026-06-04,2026-06,Fullstack JS Developer,Other IT,Hà Giang,3,27000000.0,0,1,0,1,0,1,1,0
+241,2026-06-30,2026-06,Python Backend Developer,Backend,Tuyên Quang,2,26000000.0,1,1,0,0,0,1,1,0
+242,2026-06-19,2026-06,Manual QA / QC Tester,QA / Tester,Cần Thơ,1,16500000.0,0,1,0,0,0,0,1,0
+243,2026-06-04,2026-06,Frontend React Developer,Frontend,TP. Hồ Chí Minh,2,21000000.0,0,0,0,1,0,0,1,0
+244,2026-06-08,2026-06,Fullstack JS Developer,Other IT,TP. Hồ Chí Minh,1,27500000.0,0,1,0,1,0,1,1,0
+245,2026-06-30,2026-06,Data Engineer,Data / BI,Bắc Giang,3,32500000.0,1,1,0,0,1,1,1,1
+246,2026-06-11,2026-06,Frontend React Developer,Frontend,An Giang,3,20500000.0,0,0,0,1,0,0,1,0
+247,2026-06-05,2026-06,Python Backend Developer,Backend,Bến Tre,3,25500000.0,1,1,0,0,0,1,1,0
+248,2026-06-15,2026-06,Frontend React Developer,Frontend,Bình Thuận,2,21500000.0,0,0,0,1,0,0,1,0
+249,2026-06-19,2026-06,Cloud / DevOps Engineer,Other IT,Bắc Ninh,3,31000000.0,1,1,0,0,0,1,1,1
+250,2026-06-20,2026-06,Python Backend Developer,Backend,Ninh Bình,3,25500000.0,1,1,0,0,0,1,1,0
+251,2026-06-20,2026-06,QA Automation Engineer,QA / Tester,Hà Nội,1,22000000.0,1,1,1,0,0,0,1,0
+252,2026-06-14,2026-06,Java Software Engineer,Backend,Điện Biên,4,30500000.0,0,1,1,0,0,1,1,1
+253,2026-06-22,2026-06,Data Engineer,Data / BI,Bạc Liêu,2,32500000.0,1,1,0,0,1,1,1,1
+254,2026-06-07,2026-06,Data Engineer,Data / BI,TP. Hồ Chí Minh,3,34500000.0,1,1,0,0,1,1,1,1
+255,2026-06-11,2026-06,Java Software Engineer,Backend,An Giang,3,30000000.0,0,1,1,0,0,1,1,1
+256,2026-06-13,2026-06,Manual QA / QC Tester,QA / Tester,Phú Yên,1,16500000.0,0,1,0,0,0,0,1,0
