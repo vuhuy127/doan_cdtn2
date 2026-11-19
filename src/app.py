@@ -66,18 +66,15 @@ def build_wide_tech_cover(path: str = "assets/tech_wide_cover.png") -> str:
 
     def px(x, y, w, h):
         nx, ny = x / max(1, w - 1), y / max(1, h - 1)
-        # Nền công nghệ chiều sâu xanh than - xanh biển - xanh ngọc
         r = 15 + 14 * nx + 8 * ny
         g = 23 + 48 * nx + 24 * ny
         b = 42 + 68 * nx - 12 * ny
 
-        # Vầng sáng mềm phía sau cụm nút dữ liệu
         glow = math.exp(-(((nx - 0.52) / 0.34) ** 2 + ((ny - 0.48) / 0.36) ** 2))
         r += 24 * glow
         g += 46 * glow
         b += 58 * glow
 
-        # Đường kết nối mạng lưới công nghệ
         for (x0, y0), (x1, y1) in edges:
             dx, dy = x1 - x0, y1 - y0
             denom = dx * dx + dy * dy
@@ -88,7 +85,6 @@ def build_wide_tech_cover(path: str = "assets/tech_wide_cover.png") -> str:
                 if dist < 0.0045:
                     return (125, 211, 252, 235)
 
-        # Dải sóng phân tích dữ liệu chạy ngang
         wave_a = 0.78 + 0.07 * math.sin(nx * 14.0) - 0.06 * nx
         wave_b = 0.80 + 0.05 * math.cos(nx * 10.0 + 0.8) - 0.05 * nx
         if abs(ny - wave_a) < 0.0055:
@@ -96,7 +92,6 @@ def build_wide_tech_cover(path: str = "assets/tech_wide_cover.png") -> str:
         if abs(ny - wave_b) < 0.0045:
             return (45, 212, 191, 240)
 
-        # Các nút dữ liệu
         for cx, cy, rad, col in nodes:
             d = math.hypot((nx - cx) * 1.55, ny - cy)
             if d <= rad * 1.45 and d > rad:
@@ -225,23 +220,34 @@ VN_ALIAS = {
 }
 
 PRESET_CAREERS = {
-    "Data / BI (Python, SQL, Pandas)": "data python sql pandas",
-    "Backend (Java, Python, SQL, API)": "backend java python sql",
+    "Data / BI (Python, SQL, Pandas)": "data python sql pandas bi",
+    "Backend (Java, Python, SQL, API)": "backend java python sql api",
     "Frontend (JS, TypeScript, React)": "frontend react javascript typescript",
-    "QA / Tester (Test, Automation, SQL)": "qa tester automation sql",
-    "Cloud / DevOps (Docker, AWS, Git)": "devops docker aws cloud git",
+    "QA / Tester (Test, Automation, SQL)": "qa qc tester test automation manual sql",
+    "Cloud / DevOps (Docker, AWS, Git)": "devops docker aws cloud git ci/cd",
     "Tùy chọn từ khóa...": "",
 }
 
+SKILL_LABELS = {
+    "skill_python": "Python",
+    "skill_sql": "SQL",
+    "skill_java": "Java",
+    "skill_javascript": "JS / React",
+    "skill_pandas_numpy": "Data / Pandas",
+    "skill_docker": "Docker / DevOps",
+    "skill_git": "Git",
+    "skill_aws_cloud": "AWS / Cloud",
+}
+
 SKILL_PATTERNS = {
-    "skill_python": r"\bpython\b",
-    "skill_sql": r"\b(sql|mysql|postgresql|sql server|postgres|oracle)\b",
-    "skill_java": r"\bjava\b(?!script)",
-    "skill_javascript": r"\b(javascript|js|typescript|ts|react|reactjs|node|nodejs|vue|angular)\b",
-    "skill_pandas_numpy": r"\b(pandas|numpy|scikit-learn|sklearn|data|bi|powerbi|tableau|excel)\b",
-    "skill_docker": r"\b(docker|kubernetes|k8s|ci/cd|devops)\b",
-    "skill_git": r"\b(git|github|gitlab)\b",
-    "skill_aws_cloud": r"\b(aws|azure|gcp|cloud)\b",
+    "skill_python": r"(?:^|[^a-z0-9_])python(?:[^a-z0-9_]|$)",
+    "skill_sql": r"(?:^|[^a-z0-9_])(sql|mysql|postgresql|sql\s*server|postgres|oracle|database|db)(?:[^a-z0-9_]|$)",
+    "skill_java": r"(?:^|[^a-z0-9_])java(?!script)(?:[^a-z0-9_]|$)",
+    "skill_javascript": r"(?:^|[^a-z0-9_])(javascript|js|typescript|ts|react|reactjs|node|nodejs|vue|angular|frontend)(?:[^a-z0-9_]|$)",
+    "skill_pandas_numpy": r"(?:^|[^a-z0-9_])(pandas|numpy|scikit-learn|sklearn|data|bi|power\s*bi|tableau|excel|analytics)(?:[^a-z0-9_]|$)",
+    "skill_docker": r"(?:^|[^a-z0-9_])(docker|kubernetes|k8s|ci/cd|devops)(?:[^a-z0-9_]|$)",
+    "skill_git": r"(?:^|[^a-z0-9_])(git|github|gitlab|bitbucket|version\s*control)(?:[^a-z0-9_]|$)",
+    "skill_aws_cloud": r"(?:^|[^a-z0-9_])(aws|azure|gcp|cloud)(?:[^a-z0-9_]|$)",
 }
 
 
@@ -268,7 +274,7 @@ def normalize_role(title: str) -> str:
         return "Backend"
     if any(k in t for k in ["frontend", "fe", "react", "angular", "vue", "ui", "fullstack"]):
         return "Frontend"
-    if any(k in t for k in ["qa", "qc", "test", "sdet"]):
+    if any(k in t for k in ["qa", "qc", "test", "sdet", "kiểm thử"]):
         return "QA / Tester"
     return "Other IT"
 
@@ -288,7 +294,7 @@ def parse_date(raw_val: str) -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
 
-def normalize_record(raw: dict, idx: int, source_tag: str, source_url: str = "") -> dict:
+def normalize_record(raw: dict, idx: int, nguon_web: str, link_nguon: str) -> dict:
     prov = detect_vn_province(str(raw.get("location") or "")) or "TP. Hồ Chí Minh"
     title = (raw.get("title") or "Unknown").strip()
     posted = parse_date(str(raw.get("posted_date") or ""))
@@ -313,6 +319,7 @@ def normalize_record(raw: dict, idx: int, source_tag: str, source_url: str = "")
 
     blob = " ".join([
         title,
+        role,
         str(raw.get("company") or ""),
         str(raw.get("description") or ""),
         " ".join(raw.get("tags") or []) if isinstance(raw.get("tags"), list) else str(raw.get("tags") or ""),
@@ -326,12 +333,19 @@ def normalize_record(raw: dict, idx: int, source_tag: str, source_url: str = "")
         "location": prov,
         "experience_years": f"{exp_val:.1f}",
         "salary_avg": f"{sal_val:.0f}",
-        "source": source_tag,
-        "source_url": source_url,
+        "nguon_web": nguon_web,
+        "link_nguon": link_nguon,
         "salary_val": sal_val,
         "exp_val": exp_val,
     }
     row.update(extract_skills(blob))
+    for k, v in raw.items():
+        if k.startswith("skill_") and k in SKILL_PATTERNS:
+            try:
+                if int(float(v or 0)) == 1:
+                    row[k] = 1
+            except Exception:
+                pass
     return row
 
 
@@ -339,7 +353,7 @@ def normalize_record(raw: dict, idx: int, source_tag: str, source_url: str = "")
 def load_offline_rows(path: str):
     with open(path, mode="r", encoding="utf-8-sig", newline="") as f:
         data = list(csv.DictReader(f))
-    return [normalize_record(r, i + 1, "Offline VN", "local://data/jobs_features.csv") for i, r in enumerate(data)]
+    return [normalize_record(r, i + 1, "Dữ liệu mẫu nội bộ", path) for i, r in enumerate(data)]
 
 
 def _get_text(url: str, accept: str, timeout: int = 8) -> str:
@@ -358,110 +372,92 @@ def _get_text(url: str, accept: str, timeout: int = 8) -> str:
 @st.cache_data(ttl=300, show_spinner=False)
 def fetch_online_rows(query: str, bust: int = 0):
     _ = bust
-    q = urllib.parse.quote((query or "data python sql").strip())
-    tokens = [t for t in (query or "").strip().lower().split() if len(t) >= 2]
-    out, seen, used_sources = [], set(), []
+    q_raw = (query or "data python sql").strip()
+    q_enc = urllib.parse.quote(q_raw)
+    tokens = [t for t in re.split(r"[\s,/]+", q_raw.lower()) if len(t) >= 2]
+    matched_rows, fallback_rows, seen, active_sources = [], [], set(), []
 
-    # 1. Nguồn RSS TopCV theo từ khóa & danh mục IT
-    rss_endpoints = [
-        ("TopCV RSS (Theo từ khóa)", f"https://www.topcv.vn/rss/viec-lam-theo-tu-khoa.rss?q={q}"),
-        ("TopCV RSS (Việc làm IT)", "https://www.topcv.vn/rss/viec-lam-it.rss"),
+    def _is_match(blob_low: str) -> bool:
+        if not tokens:
+            return True
+        if any(tok in blob_low for tok in tokens):
+            return True
+        if any(tok in ("qa", "qc", "test", "tester", "automation") for tok in tokens):
+            return any(k in blob_low for k in ("qa", "qc", "test", "tester", "automation", "kiểm thử"))
+        return False
+
+    rss_feeds = [
+        ("TopCV Việt Nam (RSS Việc làm IT)", "https://www.topcv.vn/rss/viec-lam-it.rss"),
+        ("TopCV Việt Nam (RSS Theo từ khóa)", f"https://www.topcv.vn/rss/viec-lam-theo-tu-khoa.rss?q={q_enc}"),
     ]
-    for src_label, r_url in rss_endpoints:
+    for src_name, feed_url in rss_feeds:
         try:
-            xml_txt = _get_text(r_url, "application/rss+xml, application/xml, text/xml, */*")
+            xml_txt = _get_text(feed_url, "application/rss+xml, application/xml, text/xml, */*")
             if "<item" in xml_txt:
                 added_here = 0
                 for item in ET.fromstring(xml_txt).findall(".//item"):
                     t_el, d_el, p_el, l_el = item.find("title"), item.find("description"), item.find("pubDate"), item.find("link")
                     title = html.unescape((t_el.text or "").strip()) if t_el is not None else ""
                     desc = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", (d_el.text or "") if d_el is not None else ""))).strip()
-                    item_link = (l_el.text or "").strip() if l_el is not None else r_url
+                    item_url = (l_el.text or "").strip() or feed_url
                     if not title or title.lower() in seen:
-                        continue
-                    if tokens and not any(tok in f"{title} {desc}".lower() for tok in tokens):
                         continue
                     seen.add(title.lower())
                     prov = detect_vn_province(f"{title} {desc}") or "TP. Hồ Chí Minh"
-                    out.append(normalize_record({
-                        "job_id": f"WEB-{len(out)+1}",
+                    rec = normalize_record({
+                        "job_id": f"WEB-{len(seen)}",
                         "posted_date": (p_el.text or "").strip() if p_el is not None else "",
                         "title": title,
-                        "company": src_label,
+                        "company": src_name,
                         "location": prov,
                         "salary_min": 18000000.0,
                         "salary_max": 30000000.0,
                         "description": desc,
-                    }, len(out) + 1, src_label, item_link))
-                    added_here += 1
-                if added_here > 0 and src_label not in used_sources:
-                    used_sources.append(f"{src_label} ({r_url})")
+                    }, len(seen), src_name, item_url)
+                    fallback_rows.append(rec)
+                    if _is_match(f"{title} {desc}".lower()):
+                        matched_rows.append(rec)
+                        added_here += 1
+                if added_here > 0:
+                    active_sources.append(f"{src_name}: {feed_url}")
         except Exception:
             continue
 
-    # 2. Nguồn trang tìm việc IT trên web
-    web_url = f"https://www.topcv.vn/tim-viec-lam-it?keyword={q}"
+    search_page_url = f"https://www.topcv.vn/tim-viec-lam-it?keyword={q_enc}"
     try:
-        page_html = _get_text(web_url, "text/html,application/xhtml+xml,*/*;q=0.8")
-        pairs = re.findall(r'<a[^>]+href="(https://www\.topcv\.vn/viec-lam/[^"]+)"[^>]*>(.*?)</a>', page_html, flags=re.S | re.I)
+        html_txt = _get_text(search_page_url, "text/html,application/xhtml+xml,*/*;q=0.8")
+        links = re.findall(r'<a[^>]+href="(https://www\.topcv\.vn/viec-lam/[^"]+)"[^>]*>(.*?)</a>', html_txt, flags=re.S | re.I)
         added_web = 0
-        for href, raw_t in pairs:
-            title = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw_t))).strip()
+        for href, raw_label in links:
+            title = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw_label))).strip()
             if len(title) < 4 or len(title) > 140 or title.lower() in seen:
-                continue
-            if tokens and not any(tok in title.lower() for tok in tokens):
                 continue
             seen.add(title.lower())
             prov = detect_vn_province(title) or "TP. Hồ Chí Minh"
-            out.append(normalize_record({
-                "job_id": f"WEB-HTML-{len(out)+1}",
+            rec = normalize_record({
+                "job_id": f"WEB-PAGE-{len(seen)}",
                 "posted_date": datetime.now().strftime("%Y-%m-%d"),
                 "title": title,
-                "company": "TopCV Web",
+                "company": "TopCV Việt Nam",
                 "location": prov,
                 "salary_min": 18000000.0,
                 "salary_max": 30000000.0,
                 "description": title,
-            }, len(out) + 1, "TopCV Web", href.strip()))
-            added_web += 1
+            }, len(seen), "TopCV Việt Nam (Trang tìm việc IT)", href.strip())
+            fallback_rows.append(rec)
+            if _is_match(title.lower()):
+                matched_rows.append(rec)
+                added_web += 1
         if added_web > 0:
-            used_sources.append(f"TopCV Web ({web_url})")
+            active_sources.append(f"TopCV Việt Nam (Trang tìm việc IT): {search_page_url}")
     except Exception:
         pass
 
-    # 3. Nguồn API công khai theo từ khóa
-    try:
-        first_tok = (query or "python").strip().split()[0]
-        api_url = f"https://remoteok.com/api?tag={urllib.parse.quote(first_tok)}"
-        items = json.loads(_get_text(api_url, "application/json"))
-        added_api = 0
-        for idx, item in enumerate(items[1:] if isinstance(items, list) else [], start=1):
-            if not isinstance(item, dict) or not item.get("position"):
-                continue
-            title = str(item.get("position")).strip()
-            if title.lower() in seen:
-                continue
-            seen.add(title.lower())
-            prov = detect_vn_province(f"{item.get('location') or ''} {title}") or "TP. Hồ Chí Minh"
-            job_url = str(item.get("url") or api_url)
-            out.append(normalize_record({
-                "job_id": f"WEB-API-{idx}",
-                "posted_date": item.get("date") or "",
-                "title": title,
-                "company": item.get("company") or "Công ty CNTT",
-                "location": prov,
-                "salary_min": 18000000.0,
-                "salary_max": 32000000.0,
-                "description": re.sub(r"<[^>]+>", " ", str(item.get("description") or "")),
-                "tags": item.get("tags") or [],
-            }, len(out) + 1, "RemoteOK API", job_url))
-            added_api += 1
-        if added_api > 0:
-            used_sources.append(f"RemoteOK API ({api_url})")
-    except Exception:
-        pass
-
-    return out, used_sources
+    if matched_rows:
+        return matched_rows, active_sources, False
+    if fallback_rows:
+        return fallback_rows, ["TopCV Việt Nam (Danh mục việc làm CNTT): https://www.topcv.vn/viec-lam-it"], True
+    return [], [], False
 
 
 st.session_state.setdefault("reset_tick", 0)
@@ -483,14 +479,14 @@ with st.sidebar:
         csv_path = st.text_input("File dữ liệu", value="data/jobs_features.csv")
         try:
             rows = load_offline_rows(csv_path)
-            status_msg = f"<b>Offline:</b> {len(rows)} tin tại các tỉnh/thành Việt Nam · Nguồn: <code>{csv_path}</code>."
+            status_msg = f"<b>Offline:</b> {len(rows)} tin tại các tỉnh/thành Việt Nam · Nguồn: <b>Dữ liệu mẫu nội bộ</b> ({csv_path})."
         except Exception as e:
             st.error(f"Không đọc được '{csv_path}': {e}")
             st.stop()
     else:
         career_choice = st.selectbox("Nghề cần tìm", list(PRESET_CAREERS.keys()), index=0)
         if career_choice == "Tùy chọn từ khóa...":
-            q_val = st.text_input("Từ khóa", value="data analyst sql").strip()
+            q_val = st.text_input("Từ khóa", value="qa tester sql").strip()
         else:
             q_val = PRESET_CAREERS[career_choice]
             st.caption(f"Từ khóa: {q_val}")
@@ -503,25 +499,26 @@ with st.sidebar:
 
         if not st.session_state.online_ran:
             rows = load_offline_rows("data/jobs_features.csv")
-            status_msg = f"Chọn nghề và bấm <b>Tìm kiếm</b> để lấy dữ liệu online · Đang hiển thị sẵn <b>Offline</b> ({len(rows)} tin)."
+            status_msg = f"Chọn nghề và bấm <b>Tìm kiếm</b> để lấy tin từ nguồn web Việt Nam · Đang hiển thị sẵn <b>Offline</b> ({len(rows)} tin)."
         else:
-            live_rows, src_list = fetch_online_rows(
+            live_rows, src_notes, is_broad = fetch_online_rows(
                 st.session_state.online_query, bust=st.session_state.online_bust
             )
             if live_rows:
                 rows = live_rows
-                joined_src = " | ".join(src_list) if src_list else "Nguồn web trực tuyến"
-                status_msg = f"<b>Online:</b> {len(rows)} tin cho <b>{st.session_state.online_label}</b> · Nguồn web: <code>{joined_src}</code>."
+                src_text = " | ".join(src_notes)
+                note_extra = " (hiển thị toàn bộ tin CNTT hiện có từ nguồn do chưa có tin khớp chặt từ khóa)" if is_broad else ""
+                status_msg = f"<b>Online:</b> {len(rows)} tin cho <b>{st.session_state.online_label}</b>{note_extra} · Nguồn web: <b>{src_text}</b>."
             else:
                 rows = load_offline_rows("data/jobs_features.csv")
-                status_msg = f"Nguồn web hiện chưa trả về tin khớp cho <b>{st.session_state.online_label}</b> · Đã chuyển về <b>Offline</b> ({len(rows)} tin)."
+                status_msg = f"Nguồn web hiện chưa phản hồi · Đã tự chuyển về <b>Offline</b> ({len(rows)} tin)."
 
 if not rows:
     st.warning("Không có dữ liệu.")
     st.stop()
 
-skill_cols = [c for c in rows[0].keys() if c.startswith("skill_")]
-skill_map = {c: c.replace("skill_", "").upper() for c in skill_cols}
+skill_cols = [c for c in SKILL_LABELS.keys() if c in rows[0]]
+skill_map = {c: SKILL_LABELS[c] for c in skill_cols}
 
 roles = ["Tất cả"] + sorted({r["role_group"] for r in rows if r.get("role_group")})
 locs = ["Tất cả"] + sorted({r["location"] for r in rows if r.get("location")})
@@ -534,22 +531,23 @@ with st.sidebar:
     sel_role = st.selectbox("Nhóm vị trí", roles, key=f"role_{tick}")
     sel_loc = st.selectbox("Tỉnh / Thành Việt Nam", locs, key=f"loc_{tick}")
     sel_skill_lbl = st.selectbox("Kỹ năng (mã hóa 1)", skill_opts, key=f"skill_{tick}")
-    kw = st.text_input("Tên vị trí", placeholder="VD: Data, Python...", key=f"kw_{tick}").strip().lower()
+    kw = st.text_input("Tên vị trí", placeholder="VD: Data, Python, QA...", key=f"kw_{tick}").strip().lower()
     if st.button("Đặt lại bộ lọc", use_container_width=True):
         st.session_state.reset_tick += 1
         st.rerun()
 
 sel_skill = "Tất cả" if sel_skill_lbl == "Tất cả" else sel_skill_lbl.replace("Có ", "", 1)
+label_to_col = {v: k for k, v in skill_map.items()}
+sel_skill_col = label_to_col.get(sel_skill)
 
 filtered = [
     r for r in rows
     if (sel_role == "Tất cả" or r["role_group"] == sel_role)
     and (sel_loc == "Tất cả" or r["location"] == sel_loc)
     and (not kw or kw in r["title"].lower())
-    and (sel_skill == "Tất cả" or int(float(r.get(f"skill_{sel_skill.lower()}", 0) or 0)) == 1)
+    and (not sel_skill_col or int(float(r.get(sel_skill_col, 0) or 0)) == 1)
 ]
 
-# --- Một hình bìa rộng đẹp chủ đề công nghệ ---
 st.markdown('<div class="cover-wrap">', unsafe_allow_html=True)
 st.image(cover_img, use_container_width=True)
 st.markdown(
@@ -719,7 +717,7 @@ with t3:
         st.info(f"Có {n} mốc tháng (cần tối thiểu 4 tháng để đánh giá MAE). Hãy dùng chế độ Dữ liệu mẫu Offline để xem đầy đủ.")
 
 with t4:
-    cols = ["job_id", "posted_date", "year_month", "title", "role_group", "location", "experience_years", "salary_avg", "source", "source_url", *skill_cols]
+    cols = ["job_id", "posted_date", "year_month", "title", "role_group", "location", "experience_years", "salary_avg", "nguon_web", "link_nguon", *skill_cols]
     tbl = [{k: r.get(k, "") for k in cols} for r in filtered]
     st.dataframe(tbl, use_container_width=True, height=320)
 
