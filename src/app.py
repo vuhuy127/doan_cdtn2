@@ -1,186 +1,198 @@
 ﻿import csv
 import html
 import json
+import math
+import os
 import re
 import statistics
+import struct
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+import zlib
 from datetime import datetime
 import streamlit as st
 
 st.set_page_config(
-    page_title="IT Talent Analytics & Forecast | doan_cdtn2",
-    page_icon="📊",
+    page_title="Phân tích & Dự báo Tuyển dụng CNTT Việt Nam",
+    page_icon="🌐",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
+
+
+def _write_png(filepath: str, width: int, height: int, pixel_fn):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    raw = bytearray()
+    for y in range(height):
+        raw.append(0)
+        for x in range(width):
+            r, g, b, a = pixel_fn(x, y, width, height)
+            raw.extend((
+                max(0, min(255, int(r))),
+                max(0, min(255, int(g))),
+                max(0, min(255, int(b))),
+                max(0, min(255, int(a))),
+            ))
+
+    def _chunk(tag: bytes, data: bytes) -> bytes:
+        crc = zlib.crc32(tag + data) & 0xFFFFFFFF
+        return struct.pack("!I", len(data)) + tag + data + struct.pack("!I", crc)
+
+    ihdr = struct.pack("!IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    idat = zlib.compress(bytes(raw), level=6)
+    png_bytes = b"\x89PNG\r\n\x1a\n" + _chunk(b"IHDR", ihdr) + _chunk(b"IDAT", idat) + _chunk(b"IEND", b"")
+    with open(filepath, "wb") as f:
+        f.write(png_bytes)
+
+
+def build_wide_tech_cover(path: str = "assets/tech_wide_cover.png") -> str:
+    nodes = [
+        (0.14, 0.34, 0.022, (56, 189, 248, 255)),
+        (0.28, 0.66, 0.026, (45, 212, 191, 255)),
+        (0.46, 0.30, 0.024, (251, 146, 60, 255)),
+        (0.62, 0.62, 0.028, (96, 165, 250, 255)),
+        (0.78, 0.36, 0.025, (45, 212, 191, 255)),
+        (0.89, 0.64, 0.020, (251, 146, 60, 255)),
+    ]
+    edges = [
+        ((0.14, 0.34), (0.28, 0.66)),
+        ((0.28, 0.66), (0.46, 0.30)),
+        ((0.46, 0.30), (0.62, 0.62)),
+        ((0.62, 0.62), (0.78, 0.36)),
+        ((0.78, 0.36), (0.89, 0.64)),
+        ((0.14, 0.34), (0.46, 0.30)),
+        ((0.46, 0.30), (0.78, 0.36)),
+    ]
+
+    def px(x, y, w, h):
+        nx, ny = x / max(1, w - 1), y / max(1, h - 1)
+        # Nền công nghệ chiều sâu xanh than - xanh biển - xanh ngọc
+        r = 15 + 14 * nx + 8 * ny
+        g = 23 + 48 * nx + 24 * ny
+        b = 42 + 68 * nx - 12 * ny
+
+        # Vầng sáng mềm phía sau cụm nút dữ liệu
+        glow = math.exp(-(((nx - 0.52) / 0.34) ** 2 + ((ny - 0.48) / 0.36) ** 2))
+        r += 24 * glow
+        g += 46 * glow
+        b += 58 * glow
+
+        # Đường kết nối mạng lưới công nghệ
+        for (x0, y0), (x1, y1) in edges:
+            dx, dy = x1 - x0, y1 - y0
+            denom = dx * dx + dy * dy
+            if denom > 0:
+                t = max(0.0, min(1.0, ((nx - x0) * dx + (ny - y0) * dy) / denom))
+                proj_x, proj_y = x0 + t * dx, y0 + t * dy
+                dist = math.hypot((nx - proj_x) * 1.6, ny - proj_y)
+                if dist < 0.0045:
+                    return (125, 211, 252, 235)
+
+        # Dải sóng phân tích dữ liệu chạy ngang
+        wave_a = 0.78 + 0.07 * math.sin(nx * 14.0) - 0.06 * nx
+        wave_b = 0.80 + 0.05 * math.cos(nx * 10.0 + 0.8) - 0.05 * nx
+        if abs(ny - wave_a) < 0.0055:
+            return (251, 146, 60, 255)
+        if abs(ny - wave_b) < 0.0045:
+            return (45, 212, 191, 240)
+
+        # Các nút dữ liệu
+        for cx, cy, rad, col in nodes:
+            d = math.hypot((nx - cx) * 1.55, ny - cy)
+            if d <= rad * 1.45 and d > rad:
+                return (col[0], col[1], col[2], 95)
+            if d <= rad:
+                return col
+
+        return (r, g, b, 255)
+
+    _write_png(path, 1280, 270, px)
+    return path
+
+
+cover_img = build_wide_tech_cover()
 
 st.markdown(
     """
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
-
         html, body, [class*="css"] {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            color: #0f172a;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
         }
-
         .stApp {
-            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            background-color: #f8fafc;
         }
-
-        [data-testid="stHeader"] {
-            background: rgba(248, 250, 252, 0.9);
-            border-bottom: 1px solid #cbd5e1;
-        }
-
         [data-testid="stSidebar"] {
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+        }
+        .cover-wrap {
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 12px;
+        }
+        .cover-caption {
             background: #ffffff;
-            border-right: 1px solid #cbd5e1;
+            padding: 12px 18px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-
-        [data-testid="stSidebar"] label,
-        [data-testid="stSidebar"] .stMarkdown p {
-            color: #1e293b !important;
-            font-weight: 600;
-        }
-
-        .hero-box {
-            background: linear-gradient(120deg, #1d4ed8 0%, #0f766e 100%);
-            border-radius: 16px;
-            padding: 22px 26px;
-            color: #ffffff;
-            margin-bottom: 14px;
-            box-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.25);
-        }
-
-        .hero-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            color: #ffffff;
-            padding: 3px 11px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .hero-title {
-            font-size: 1.7rem;
+        .cover-caption h1 {
+            font-size: 1.32rem;
             font-weight: 800;
-            color: #ffffff;
-            margin: 0 0 4px 0;
-        }
-
-        .hero-desc {
-            font-size: 0.92rem;
-            color: #f1f5f9;
+            color: #0f172a;
             margin: 0;
         }
-
-        .filter-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .filter-chip {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            color: #0f172a;
-            padding: 5px 12px;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-        }
-
-        .kpi-box {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-left: 5px solid #2563eb;
-            border-radius: 12px;
-            padding: 15px 16px;
-            box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.08);
-            height: 100%;
-        }
-
-        .kpi-box.green { border-left-color: #059669; }
-        .kpi-box.amber { border-left-color: #d97706; }
-        .kpi-box.indigo { border-left-color: #4f46e5; }
-        .kpi-box.rose { border-left-color: #e11d48; }
-
-        .kpi-title {
-            font-size: 0.74rem;
-            font-weight: 700;
-            text-transform: uppercase;
+        .cover-caption .sub {
+            font-size: 0.83rem;
             color: #475569;
-            margin-bottom: 4px;
         }
-
-        .kpi-num {
-            font-size: 1.45rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.2;
-        }
-
-        .kpi-sub {
-            font-size: 0.76rem;
-            color: #64748b;
-            margin-top: 3px;
-        }
-
-        .card-panel {
-            background: #ffffff;
+        .source-note {
+            background-color: #ffffff;
             border: 1px solid #cbd5e1;
-            border-radius: 14px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.07);
+            border-left: 4px solid #0284c7;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #1e293b;
+            margin-bottom: 12px;
         }
-
-        .helper-hint {
-            font-size: 0.82rem;
-            color: #475569;
-            background: #f8fafc;
+        .stat-cell {
+            background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
+            padding: 12px 14px;
         }
-
-        .note-box {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-left: 4px solid #2563eb;
-            border-radius: 10px;
-            padding: 12px 16px;
-            color: #1e3a8a;
-            margin-top: 10px;
-            font-size: 0.9rem;
+        .stat-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
         }
-
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 6px;
-            background: #ffffff;
-            padding: 6px;
-            border-radius: 12px;
-            border: 1px solid #cbd5e1;
+        .stat-main {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 2px 0;
         }
-
-        .stTabs [data-baseweb="tab"] {
-            border-radius: 8px;
-            padding: 8px 14px;
-            font-weight: 600;
+        .stat-sub {
+            font-size: 0.75rem;
+            color: #475569;
+        }
+        .caption-note {
+            font-size: 0.82rem;
             color: #334155;
-        }
-
-        .stTabs [aria-selected="true"] {
-            background: #2563eb !important;
-            color: #ffffff !important;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
     </style>
     """,
@@ -201,49 +213,25 @@ VN_PROVINCES = [
     "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái",
 ]
 
-VN_ALIAS_MAP = {
-    "ho chi minh": "TP. Hồ Chí Minh",
-    "hồ chí minh": "TP. Hồ Chí Minh",
-    "hcm": "TP. Hồ Chí Minh",
-    "saigon": "TP. Hồ Chí Minh",
-    "sai gon": "TP. Hồ Chí Minh",
-    "sài gòn": "TP. Hồ Chí Minh",
-    "hanoi": "Hà Nội",
-    "ha noi": "Hà Nội",
-    "hà nội": "Hà Nội",
-    "da nang": "Đà Nẵng",
-    "danang": "Đà Nẵng",
-    "đà nẵng": "Đà Nẵng",
-    "can tho": "Cần Thơ",
-    "cần thơ": "Cần Thơ",
-    "hai phong": "Hải Phòng",
-    "hải phòng": "Hải Phòng",
-    "binh duong": "Bình Dương",
-    "bình dương": "Bình Dương",
-    "dong nai": "Đồng Nai",
-    "đồng nai": "Đồng Nai",
+VN_ALIAS = {
+    "ho chi minh": "TP. Hồ Chí Minh", "hồ chí minh": "TP. Hồ Chí Minh", "hcm": "TP. Hồ Chí Minh",
+    "saigon": "TP. Hồ Chí Minh", "sài gòn": "TP. Hồ Chí Minh",
+    "hanoi": "Hà Nội", "ha noi": "Hà Nội", "hà nội": "Hà Nội",
+    "da nang": "Đà Nẵng", "đà nẵng": "Đà Nẵng",
+    "can tho": "Cần Thơ", "cần thơ": "Cần Thơ",
+    "hai phong": "Hải Phòng", "hải phòng": "Hải Phòng",
+    "binh duong": "Bình Dương", "bình dương": "Bình Dương",
+    "dong nai": "Đồng Nai", "đồng nai": "Đồng Nai",
 }
 
-
-def detect_vn_province(text_blob: str):
-    txt = (text_blob or "").strip()
-    if not txt:
-        return None
-    low = txt.lower()
-
-    for p in VN_PROVINCES:
-        if p.lower() in low:
-            return p
-
-    for alias, prov in VN_ALIAS_MAP.items():
-        if alias in low:
-            return prov
-
-    if "việt nam" in low or "vietnam" in low or "viet nam" in low:
-        return "TP. Hồ Chí Minh"
-
-    return None
-
+PRESET_CAREERS = {
+    "Data / BI (Python, SQL, Pandas)": "data python sql pandas",
+    "Backend (Java, Python, SQL, API)": "backend java python sql",
+    "Frontend (JS, TypeScript, React)": "frontend react javascript typescript",
+    "QA / Tester (Test, Automation, SQL)": "qa tester automation sql",
+    "Cloud / DevOps (Docker, AWS, Git)": "devops docker aws cloud git",
+    "Tùy chọn từ khóa...": "",
+}
 
 SKILL_PATTERNS = {
     "skill_python": r"\bpython\b",
@@ -257,35 +245,42 @@ SKILL_PATTERNS = {
 }
 
 
+def detect_vn_province(text_blob: str):
+    low = (text_blob or "").strip().lower()
+    if not low:
+        return None
+    for p in VN_PROVINCES:
+        if p.lower() in low:
+            return p
+    for k, v in VN_ALIAS.items():
+        if k in low:
+            return v
+    if "việt nam" in low or "vietnam" in low or "viet nam" in low:
+        return "TP. Hồ Chí Minh"
+    return None
+
+
 def normalize_role(title: str) -> str:
     t = (title or "").lower()
-    if any(k in t for k in ["data", "bi", "analyst", "scientist", "machine learning", "ai", "phân tích dữ liệu"]):
+    if any(k in t for k in ["data", "bi", "analyst", "scientist", "ai", "ml"]):
         return "Data / BI"
-    if any(k in t for k in ["backend", "be", "java", "node", ".net", "php", "python", "api", "lập trình viên"]):
+    if any(k in t for k in ["backend", "be", "java", "node", ".net", "php", "python", "api"]):
         return "Backend"
     if any(k in t for k in ["frontend", "fe", "react", "angular", "vue", "ui", "fullstack"]):
         return "Frontend"
-    if any(k in t for k in ["qa", "qc", "test", "sdet", "kiểm thử"]):
+    if any(k in t for k in ["qa", "qc", "test", "sdet"]):
         return "QA / Tester"
     return "Other IT"
 
 
 def extract_skills(text: str) -> dict:
-    content = (text or "").lower()
-    return {
-        col: int(bool(re.search(pattern, content)))
-        for col, pattern in SKILL_PATTERNS.items()
-    }
+    low = (text or "").lower()
+    return {col: int(bool(re.search(pat, low))) for col, pat in SKILL_PATTERNS.items()}
 
 
-def parse_date_str(raw_val: str) -> str:
+def parse_date(raw_val: str) -> str:
     s = (raw_val or "").strip()
-    if not s:
-        return datetime.now().strftime("%Y-%m-%d")
-    for fmt in (
-        "%Y-%m-%d", "%d/%m/%Y", "%Y/%m/%d",
-        "%a, %d %b %Y %H:%M:%S %z", "%a, %d %b %Y %H:%M:%S GMT",
-    ):
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%Y/%m/%d", "%a, %d %b %Y %H:%M:%S %z", "%a, %d %b %Y %H:%M:%S GMT"):
         try:
             return datetime.strptime(s[:31], fmt).strftime("%Y-%m-%d")
         except Exception:
@@ -293,68 +288,65 @@ def parse_date_str(raw_val: str) -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
 
-def normalize_row_record(raw_dict: dict, idx: int):
-    vn_prov = detect_vn_province(str(raw_dict.get("location") or "")) or "TP. Hồ Chí Minh"
-    title = (raw_dict.get("title") or "Unknown").strip()
-    posted_date = parse_date_str(str(raw_dict.get("posted_date") or ""))
-    year_month = posted_date[:7]
-    role_group = (raw_dict.get("role_group") or normalize_role(title)).strip()
+def normalize_record(raw: dict, idx: int, source_tag: str, source_url: str = "") -> dict:
+    prov = detect_vn_province(str(raw.get("location") or "")) or "TP. Hồ Chí Minh"
+    title = (raw.get("title") or "Unknown").strip()
+    posted = parse_date(str(raw.get("posted_date") or ""))
+    role = (raw.get("role_group") or normalize_role(title)).strip()
 
     try:
-        exp_val = float(raw_dict.get("experience_years") or 1.0)
+        exp_val = float(raw.get("experience_years") or 1.0)
     except Exception:
         exp_val = 1.0
 
     try:
-        sal_val = float(raw_dict.get("salary_avg") or 0.0)
+        sal_val = float(raw.get("salary_avg") or 0.0)
     except Exception:
         sal_val = 0.0
 
     if sal_val <= 0:
         try:
-            s_min = float(raw_dict.get("salary_min") or 0.0)
-            s_max = float(raw_dict.get("salary_max") or 0.0)
-            vals = [v for v in (s_min, s_max) if v > 0]
+            vals = [float(x) for x in (raw.get("salary_min"), raw.get("salary_max")) if x and float(x) > 0]
             sal_val = statistics.mean(vals) if vals else 20000000.0
         except Exception:
             sal_val = 20000000.0
 
-    desc_blob = " ".join([
+    blob = " ".join([
         title,
-        str(raw_dict.get("company") or ""),
-        str(raw_dict.get("description") or ""),
-        " ".join(raw_dict.get("tags") or []) if isinstance(raw_dict.get("tags"), list) else str(raw_dict.get("tags") or ""),
+        str(raw.get("company") or ""),
+        str(raw.get("description") or ""),
+        " ".join(raw.get("tags") or []) if isinstance(raw.get("tags"), list) else str(raw.get("tags") or ""),
     ])
-    skills = extract_skills(desc_blob)
-
     row = {
-        "job_id": str(raw_dict.get("job_id") or idx),
-        "posted_date": posted_date,
-        "year_month": year_month,
+        "job_id": str(raw.get("job_id") or idx),
+        "posted_date": posted,
+        "year_month": posted[:7],
         "title": title,
-        "role_group": role_group,
-        "location": vn_prov,
+        "role_group": role,
+        "location": prov,
         "experience_years": f"{exp_val:.1f}",
         "salary_avg": f"{sal_val:.0f}",
+        "source": source_tag,
+        "source_url": source_url,
         "salary_val": sal_val,
         "exp_val": exp_val,
     }
-    row.update(skills)
+    row.update(extract_skills(blob))
     return row
 
 
 @st.cache_data
-def load_offline_features(path: str):
+def load_offline_rows(path: str):
     with open(path, mode="r", encoding="utf-8-sig", newline="") as f:
-        raw_rows = list(csv.DictReader(f))
-    return [normalize_row_record(r, i + 1) for i, r in enumerate(raw_rows)]
+        data = list(csv.DictReader(f))
+    return [normalize_record(r, i + 1, "Offline VN", "local://data/jobs_features.csv") for i, r in enumerate(data)]
 
 
-def _http_get_text(url: str, accept: str, timeout: int = 10):
+def _get_text(url: str, accept: str, timeout: int = 8) -> str:
     req = urllib.request.Request(
         url,
         headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Accept": accept,
             "Accept-Language": "vi-VN,vi;q=0.9,en;q=0.8",
         },
@@ -363,486 +355,380 @@ def _http_get_text(url: str, accept: str, timeout: int = 10):
         return resp.read().decode("utf-8", errors="ignore")
 
 
-@st.cache_data(ttl=600)
-def fetch_live_vn_jobs_upgraded(keyword_query: str = "data python", limit: int = 40):
-    q = urllib.parse.quote((keyword_query or "data python").strip())
-    kw_tokens = [t for t in (keyword_query or "").strip().lower().split() if len(t) >= 2]
-    normalized = []
-    seen_titles = set()
+@st.cache_data(ttl=300, show_spinner=False)
+def fetch_online_rows(query: str, bust: int = 0):
+    _ = bust
+    q = urllib.parse.quote((query or "data python sql").strip())
+    tokens = [t for t in (query or "").strip().lower().split() if len(t) >= 2]
+    out, seen, used_sources = [], set(), []
 
-    # Nguồn 1: RSS việc làm IT Việt Nam (TopCV)
-    rss_urls = [
-        "https://www.topcv.vn/rss/viec-lam-it.rss",
-        f"https://www.topcv.vn/rss/viec-lam-theo-tu-khoa.rss?q={q}",
+    # 1. Nguồn RSS TopCV theo từ khóa & danh mục IT
+    rss_endpoints = [
+        ("TopCV RSS (Theo từ khóa)", f"https://www.topcv.vn/rss/viec-lam-theo-tu-khoa.rss?q={q}"),
+        ("TopCV RSS (Việc làm IT)", "https://www.topcv.vn/rss/viec-lam-it.rss"),
     ]
-    for r_url in rss_urls:
+    for src_label, r_url in rss_endpoints:
         try:
-            xml_txt = _http_get_text(r_url, "application/rss+xml, application/xml, text/xml, */*", timeout=9)
+            xml_txt = _get_text(r_url, "application/rss+xml, application/xml, text/xml, */*")
             if "<item" in xml_txt:
-                root = ET.fromstring(xml_txt)
-                for item in root.findall(".//item"):
-                    t_el = item.find("title")
-                    d_el = item.find("description")
-                    p_el = item.find("pubDate")
-                    title_txt = html.unescape((t_el.text or "").strip()) if t_el is not None else ""
-                    desc_txt = html.unescape(re.sub(r"<[^>]+>", " ", (d_el.text or "") if d_el is not None else ""))
-                    desc_txt = re.sub(r"\s+", " ", desc_txt).strip()
-                    pub_txt = (p_el.text or "").strip() if p_el is not None else ""
-                    if not title_txt or title_txt.lower() in seen_titles:
+                added_here = 0
+                for item in ET.fromstring(xml_txt).findall(".//item"):
+                    t_el, d_el, p_el, l_el = item.find("title"), item.find("description"), item.find("pubDate"), item.find("link")
+                    title = html.unescape((t_el.text or "").strip()) if t_el is not None else ""
+                    desc = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", (d_el.text or "") if d_el is not None else ""))).strip()
+                    item_link = (l_el.text or "").strip() if l_el is not None else r_url
+                    if not title or title.lower() in seen:
                         continue
-                    blob = f"{title_txt} {desc_txt}".lower()
-                    if kw_tokens and not any(tok in blob for tok in kw_tokens):
+                    if tokens and not any(tok in f"{title} {desc}".lower() for tok in tokens):
                         continue
-                    seen_titles.add(title_txt.lower())
-                    prov = detect_vn_province(f"{title_txt} {desc_txt}") or "TP. Hồ Chí Minh"
-                    rec = {
-                        "job_id": f"VN-RSS-{len(normalized) + 1}",
-                        "posted_date": pub_txt,
-                        "title": title_txt,
-                        "company": "TopCV VN",
+                    seen.add(title.lower())
+                    prov = detect_vn_province(f"{title} {desc}") or "TP. Hồ Chí Minh"
+                    out.append(normalize_record({
+                        "job_id": f"WEB-{len(out)+1}",
+                        "posted_date": (p_el.text or "").strip() if p_el is not None else "",
+                        "title": title,
+                        "company": src_label,
                         "location": prov,
-                        "experience_years": 2.0,
                         "salary_min": 18000000.0,
                         "salary_max": 30000000.0,
-                        "description": desc_txt,
-                    }
-                    normalized.append(normalize_row_record(rec, len(normalized) + 1))
-                    if len(normalized) >= limit:
-                        return normalized
+                        "description": desc,
+                    }, len(out) + 1, src_label, item_link))
+                    added_here += 1
+                if added_here > 0 and src_label not in used_sources:
+                    used_sources.append(f"{src_label} ({r_url})")
         except Exception:
             continue
 
-    # Nguồn 2: Trang tìm kiếm việc làm IT Việt Nam (HTML)
-    html_urls = [
-        f"https://www.topcv.vn/tim-viec-lam-it?keyword={q}",
-        "https://www.topcv.vn/tim-viec-lam-it",
-    ]
-    for h_url in html_urls:
-        try:
-            page_html = _http_get_text(h_url, "text/html,application/xhtml+xml,*/*;q=0.8", timeout=9)
-            matches = re.findall(r'<a[^>]+href="https://www\.topcv\.vn/viec-lam/[^"]+"[^>]*>(.*?)</a>', page_html, flags=re.S | re.I)
-            for raw_t in matches:
-                clean_t = html.unescape(re.sub(r"<[^>]+>", " ", raw_t))
-                clean_t = re.sub(r"\s+", " ", clean_t).strip()
-                if len(clean_t) < 4 or len(clean_t) > 140:
-                    continue
-                low_t = clean_t.lower()
-                if low_t in seen_titles or low_t.startswith(("xem tất cả", "tìm hiểu", "đăng nhập")):
-                    continue
-                if kw_tokens and not any(tok in low_t for tok in kw_tokens):
-                    continue
-                seen_titles.add(low_t)
-                prov = detect_vn_province(clean_t) or "TP. Hồ Chí Minh"
-                rec = {
-                    "job_id": f"VN-WEB-{len(normalized) + 1}",
-                    "posted_date": datetime.now().strftime("%Y-%m-%d"),
-                    "title": clean_t,
-                    "company": "Doanh nghiệp tại Việt Nam",
-                    "location": prov,
-                    "experience_years": 2.0,
-                    "salary_min": 17000000.0,
-                    "salary_max": 29000000.0,
-                    "description": clean_t,
-                }
-                normalized.append(normalize_row_record(rec, len(normalized) + 1))
-                if len(normalized) >= limit:
-                    return normalized
-        except Exception:
-            continue
-
-    # Nguồn 3: API việc làm công khai (lọc các tin có liên quan Việt Nam hoặc gán khu vực Việt Nam khi tìm kiếm mở)
+    # 2. Nguồn trang tìm việc IT trên web
+    web_url = f"https://www.topcv.vn/tim-viec-lam-it?keyword={q}"
     try:
-        api_url = f"https://remoteok.com/api?tag={urllib.parse.quote((keyword_query or 'python').strip().split()[0])}"
-        raw_json = _http_get_text(api_url, "application/json", timeout=9)
-        data = json.loads(raw_json)
-        items = data[1:] if isinstance(data, list) and len(data) > 1 else []
-        for idx, item in enumerate(items, start=1):
+        page_html = _get_text(web_url, "text/html,application/xhtml+xml,*/*;q=0.8")
+        pairs = re.findall(r'<a[^>]+href="(https://www\.topcv\.vn/viec-lam/[^"]+)"[^>]*>(.*?)</a>', page_html, flags=re.S | re.I)
+        added_web = 0
+        for href, raw_t in pairs:
+            title = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw_t))).strip()
+            if len(title) < 4 or len(title) > 140 or title.lower() in seen:
+                continue
+            if tokens and not any(tok in title.lower() for tok in tokens):
+                continue
+            seen.add(title.lower())
+            prov = detect_vn_province(title) or "TP. Hồ Chí Minh"
+            out.append(normalize_record({
+                "job_id": f"WEB-HTML-{len(out)+1}",
+                "posted_date": datetime.now().strftime("%Y-%m-%d"),
+                "title": title,
+                "company": "TopCV Web",
+                "location": prov,
+                "salary_min": 18000000.0,
+                "salary_max": 30000000.0,
+                "description": title,
+            }, len(out) + 1, "TopCV Web", href.strip()))
+            added_web += 1
+        if added_web > 0:
+            used_sources.append(f"TopCV Web ({web_url})")
+    except Exception:
+        pass
+
+    # 3. Nguồn API công khai theo từ khóa
+    try:
+        first_tok = (query or "python").strip().split()[0]
+        api_url = f"https://remoteok.com/api?tag={urllib.parse.quote(first_tok)}"
+        items = json.loads(_get_text(api_url, "application/json"))
+        added_api = 0
+        for idx, item in enumerate(items[1:] if isinstance(items, list) else [], start=1):
             if not isinstance(item, dict) or not item.get("position"):
                 continue
-            loc_raw = str(item.get("location") or "")
-            pos_raw = str(item.get("position") or "")
-            if pos_raw.lower() in seen_titles:
+            title = str(item.get("position")).strip()
+            if title.lower() in seen:
                 continue
-            seen_titles.add(pos_raw.lower())
-            prov = detect_vn_province(f"{loc_raw} {pos_raw}") or "TP. Hồ Chí Minh"
-            rec = {
-                "job_id": f"VN-API-{idx}",
-                "posted_date": item.get("date") or datetime.now().strftime("%Y-%m-%d"),
-                "title": pos_raw,
+            seen.add(title.lower())
+            prov = detect_vn_province(f"{item.get('location') or ''} {title}") or "TP. Hồ Chí Minh"
+            job_url = str(item.get("url") or api_url)
+            out.append(normalize_record({
+                "job_id": f"WEB-API-{idx}",
+                "posted_date": item.get("date") or "",
+                "title": title,
                 "company": item.get("company") or "Công ty CNTT",
                 "location": prov,
-                "experience_years": 2.0,
                 "salary_min": 18000000.0,
                 "salary_max": 32000000.0,
                 "description": re.sub(r"<[^>]+>", " ", str(item.get("description") or "")),
                 "tags": item.get("tags") or [],
-            }
-            normalized.append(normalize_row_record(rec, len(normalized) + 1))
-            if len(normalized) >= limit:
-                return normalized
+            }, len(out) + 1, "RemoteOK API", job_url))
+            added_api += 1
+        if added_api > 0:
+            used_sources.append(f"RemoteOK API ({api_url})")
     except Exception:
         pass
 
-    return normalized
+    return out, used_sources
 
+
+st.session_state.setdefault("reset_tick", 0)
+st.session_state.setdefault("online_ran", False)
+st.session_state.setdefault("online_query", PRESET_CAREERS["Data / BI (Python, SQL, Pandas)"])
+st.session_state.setdefault("online_label", "Data / BI (Python, SQL, Pandas)")
+st.session_state.setdefault("online_bust", 0)
 
 with st.sidebar:
-    st.markdown("## 🎛️ Chế độ nguồn dữ liệu (Việt Nam)")
+    st.markdown("**Nguồn dữ liệu**")
     source_mode = st.radio(
-        "Chọn nguồn dữ liệu",
-        options=["File mẫu Offline (CSV)", "Tìm kiếm online Việt Nam"],
+        "Chế độ",
+        ["Dữ liệu mẫu Offline", "Tìm kiếm Online"],
         index=0,
+        label_visibility="collapsed",
     )
 
-    if source_mode == "File mẫu Offline (CSV)":
-        data_path = st.text_input("Đường dẫn file CSV", value="data/jobs_features.csv")
+    if source_mode == "Dữ liệu mẫu Offline":
+        csv_path = st.text_input("File dữ liệu", value="data/jobs_features.csv")
         try:
-            rows = load_offline_features(data_path)
-            source_badge = f"Offline Việt Nam ({data_path})"
+            rows = load_offline_rows(csv_path)
+            status_msg = f"<b>Offline:</b> {len(rows)} tin tại các tỉnh/thành Việt Nam · Nguồn: <code>{csv_path}</code>."
         except Exception as e:
-            st.error(f"Không thể đọc file '{data_path}': {e}")
+            st.error(f"Không đọc được '{csv_path}': {e}")
             st.stop()
     else:
-        live_query = st.text_input("Từ khóa tìm kiếm việc làm IT", value="data python sql")
-        live_limit = st.slider("Số lượng tin tối đa", min_value=10, max_value=60, value=30, step=10)
-        try:
-            rows = fetch_live_vn_jobs_upgraded(live_query, limit=live_limit)
-            if rows:
-                source_badge = f"Online ('{live_query or 'IT'}')"
+        career_choice = st.selectbox("Nghề cần tìm", list(PRESET_CAREERS.keys()), index=0)
+        if career_choice == "Tùy chọn từ khóa...":
+            q_val = st.text_input("Từ khóa", value="data analyst sql").strip()
+        else:
+            q_val = PRESET_CAREERS[career_choice]
+            st.caption(f"Từ khóa: {q_val}")
+
+        if st.button("Tìm kiếm", type="primary", use_container_width=True):
+            st.session_state.online_ran = True
+            st.session_state.online_query = q_val or "data python sql"
+            st.session_state.online_label = career_choice
+            st.session_state.online_bust += 1
+
+        if not st.session_state.online_ran:
+            rows = load_offline_rows("data/jobs_features.csv")
+            status_msg = f"Chọn nghề và bấm <b>Tìm kiếm</b> để lấy dữ liệu online · Đang hiển thị sẵn <b>Offline</b> ({len(rows)} tin)."
+        else:
+            live_rows, src_list = fetch_online_rows(
+                st.session_state.online_query, bust=st.session_state.online_bust
+            )
+            if live_rows:
+                rows = live_rows
+                joined_src = " | ".join(src_list) if src_list else "Nguồn web trực tuyến"
+                status_msg = f"<b>Online:</b> {len(rows)} tin cho <b>{st.session_state.online_label}</b> · Nguồn web: <code>{joined_src}</code>."
             else:
-                st.info("Các nguồn online tạm thời chưa trả về tin khớp từ khóa; hệ thống tự dùng dữ liệu mẫu Việt Nam offline.")
-                rows = load_offline_features("data/jobs_features.csv")
-                source_badge = "Offline Việt Nam (Dự phòng)"
-        except Exception:
-            st.info("Kết nối online tạm thời gián đoạn; hệ thống tự dùng dữ liệu mẫu Việt Nam offline.")
-            rows = load_offline_features("data/jobs_features.csv")
-            source_badge = "Offline Việt Nam (Dự phòng)"
+                rows = load_offline_rows("data/jobs_features.csv")
+                status_msg = f"Nguồn web hiện chưa trả về tin khớp cho <b>{st.session_state.online_label}</b> · Đã chuyển về <b>Offline</b> ({len(rows)} tin)."
 
 if not rows:
-    st.warning("Không có dữ liệu tỉnh/thành Việt Nam để hiển thị.")
+    st.warning("Không có dữ liệu.")
     st.stop()
 
-skill_cols = [k for k in rows[0].keys() if k.startswith("skill_")]
-skill_name_map = {col: col.replace("skill_", "").upper() for col in skill_cols}
+skill_cols = [c for c in rows[0].keys() if c.startswith("skill_")]
+skill_map = {c: c.replace("skill_", "").upper() for c in skill_cols}
 
-roles = ["Tất cả"] + sorted({r.get("role_group", "Khác") for r in rows if r.get("role_group")})
-locations = ["Tất cả"] + sorted({r.get("location") for r in rows if r.get("location")})
-skill_options = ["Tất cả"] + [f"Có {skill_name_map[c]}" for c in skill_cols]
+roles = ["Tất cả"] + sorted({r["role_group"] for r in rows if r.get("role_group")})
+locs = ["Tất cả"] + sorted({r["location"] for r in rows if r.get("location")})
+skill_opts = ["Tất cả"] + [f"Có {skill_map[c]}" for c in skill_cols]
 
+tick = st.session_state.reset_tick
 with st.sidebar:
-    st.markdown("### 🔍 Bộ lọc chi tiết")
-    selected_role = st.selectbox("Nhóm vị trí", roles)
-    selected_loc = st.selectbox("Tỉnh / Thành phố (Việt Nam)", locations)
-    selected_skill_label = st.selectbox("Lọc tin có kỹ năng (mã hóa 1)", skill_options)
-    keyword = st.text_input("Lọc nhanh tên vị trí", value="", placeholder="VD: Data, Python, React...").strip().lower()
-    st.markdown("---")
-    st.caption(f"Nguồn đang dùng: {source_badge}")
+    st.divider()
+    st.markdown("**Bộ lọc**")
+    sel_role = st.selectbox("Nhóm vị trí", roles, key=f"role_{tick}")
+    sel_loc = st.selectbox("Tỉnh / Thành Việt Nam", locs, key=f"loc_{tick}")
+    sel_skill_lbl = st.selectbox("Kỹ năng (mã hóa 1)", skill_opts, key=f"skill_{tick}")
+    kw = st.text_input("Tên vị trí", placeholder="VD: Data, Python...", key=f"kw_{tick}").strip().lower()
+    if st.button("Đặt lại bộ lọc", use_container_width=True):
+        st.session_state.reset_tick += 1
+        st.rerun()
 
-selected_skill = "Tất cả" if selected_skill_label == "Tất cả" else selected_skill_label.replace("Có ", "", 1)
+sel_skill = "Tất cả" if sel_skill_lbl == "Tất cả" else sel_skill_lbl.replace("Có ", "", 1)
 
-filtered = []
-for r in rows:
-    if selected_role != "Tất cả" and r.get("role_group") != selected_role:
-        continue
-    if selected_loc != "Tất cả" and r.get("location") != selected_loc:
-        continue
-    if keyword and keyword not in (r.get("title") or "").lower():
-        continue
-    if selected_skill != "Tất cả":
-        target_col = f"skill_{selected_skill.lower()}"
-        try:
-            if int(float(r.get(target_col) or 0)) != 1:
-                continue
-        except Exception:
-            continue
-    filtered.append(r)
+filtered = [
+    r for r in rows
+    if (sel_role == "Tất cả" or r["role_group"] == sel_role)
+    and (sel_loc == "Tất cả" or r["location"] == sel_loc)
+    and (not kw or kw in r["title"].lower())
+    and (sel_skill == "Tất cả" or int(float(r.get(f"skill_{sel_skill.lower()}", 0) or 0)) == 1)
+]
 
+# --- Một hình bìa rộng đẹp chủ đề công nghệ ---
+st.markdown('<div class="cover-wrap">', unsafe_allow_html=True)
+st.image(cover_img, use_container_width=True)
 st.markdown(
     """
-    <div class="hero-box">
-        <div class="hero-tag">CHUYÊN ĐỀ TỐT NGHIỆP 2 • KHOA HỌC DỮ LIỆU • DOAN_CDTN2</div>
-        <h1 class="hero-title">Phân tích & Dự báo Xu hướng Tuyển dụng Ngành CNTT Việt Nam</h1>
-        <p class="hero-desc">Phân tích kỹ năng theo nhóm vị trí, mức lương trung vị, phân bố tỉnh/thành Việt Nam và đánh giá dự báo theo tháng (MAE vs. Baseline).</p>
+    <div class="cover-caption">
+        <div>
+            <h1>Phân tích & Dự báo Tuyển dụng CNTT Việt Nam</h1>
+            <div class="sub">Kỹ năng theo nhóm vị trí · Lương trung vị · Tỉnh/thành Việt Nam · Dự báo xu hướng & MAE</div>
+        </div>
+        <div class="sub">Kho dữ liệu: <b>doan_cdtn2</b></div>
     </div>
     """,
     unsafe_allow_html=True,
 )
+st.markdown('</div>', unsafe_allow_html=True)
 
-kw_text = keyword if keyword else "Không có"
 st.markdown(
-    f"""
-    <div class="filter-bar">
-        <span class="filter-chip">🇻🇳 Phạm vi: <b>Tỉnh/Thành Việt Nam</b></span>
-        <span class="filter-chip">📌 Nhóm vị trí: <b>{selected_role}</b></span>
-        <span class="filter-chip">🗺️ Tỉnh/Thành: <b>{selected_loc}</b></span>
-        <span class="filter-chip">🧩 Kỹ năng: <b>{selected_skill_label}</b></span>
-        <span class="filter-chip">🔎 Từ khóa: <b>{kw_text}</b></span>
-    </div>
-    """,
+    f'<div class="source-note">{status_msg} · Bộ lọc: <b>{sel_role}</b> / <b>{sel_loc}</b> / <b>{sel_skill_lbl}</b></div>',
     unsafe_allow_html=True,
 )
 
-skill_totals = {}
-for col in skill_cols:
-    total = 0
-    for r in filtered:
-        try:
-            total += int(float(r.get(col) or 0))
-        except Exception:
-            pass
-    skill_totals[skill_name_map[col]] = total
-
+skill_totals = {
+    skill_map[c]: sum(int(float(r.get(c, 0) or 0)) for r in filtered)
+    for c in skill_cols
+}
 salaries = [r["salary_val"] for r in filtered if r["salary_val"] > 0]
-median_sal = statistics.median(salaries) if salaries else 0.0
+med_sal = statistics.median(salaries) if salaries else 0.0
 exps = [r["exp_val"] for r in filtered if r["exp_val"] > 0]
-median_exp = statistics.median(exps) if exps else 0.0
-distinct_provinces = len({r.get("location") for r in filtered if r.get("location")})
+med_exp = statistics.median(exps) if exps else 0.0
+prov_cnt = len({r["location"] for r in filtered if r.get("location")})
 
-if skill_totals and any(v > 0 for v in skill_totals.values()):
-    top_skill, top_count = max(skill_totals.items(), key=lambda x: x[1])
-    top_pct = (top_count / len(filtered) * 100) if len(filtered) > 0 else 0.0
-    top_skill_val = top_skill
-    top_skill_sub = f"Có ở {top_count}/{len(filtered)} tin ({top_pct:.0f}%)"
+if filtered and any(v > 0 for v in skill_totals.values()):
+    top_sk, top_n = max(skill_totals.items(), key=lambda x: x[1])
+    top_sk_sub = f"{top_n}/{len(filtered)} tin ({round(top_n / len(filtered) * 100)}%)"
 else:
-    top_skill_val = "N/A"
-    top_skill_sub = "Không có dữ liệu"
+    top_sk, top_sk_sub = "N/A", "0 tin"
 
 c1, c2, c3, c4, c5 = st.columns(5)
-with c1:
-    st.markdown(f'<div class="kpi-box"><div class="kpi-title">Số tin tuyển dụng</div><div class="kpi-num">{len(filtered):,}</div><div class="kpi-sub">Sau khi áp dụng bộ lọc</div></div>', unsafe_allow_html=True)
-with c2:
-    st.markdown(f'<div class="kpi-box green"><div class="kpi-title">Tỉnh / Thành phố</div><div class="kpi-num">{distinct_provinces}</div><div class="kpi-sub">Chỉ thuộc Việt Nam</div></div>', unsafe_allow_html=True)
-with c3:
-    st.markdown(f'<div class="kpi-box amber"><div class="kpi-title">Lương trung vị</div><div class="kpi-num">{median_sal/1e6:.1f}M</div><div class="kpi-sub">{median_sal:,.0f} VNĐ</div></div>', unsafe_allow_html=True)
-with c4:
-    st.markdown(f'<div class="kpi-box indigo"><div class="kpi-title">Kỹ năng xuất hiện nhiều nhất</div><div class="kpi-num">{top_skill_val}</div><div class="kpi-sub">{top_skill_sub}</div></div>', unsafe_allow_html=True)
-with c5:
-    st.markdown(f'<div class="kpi-box rose"><div class="kpi-title">Kinh nghiệm trung vị</div><div class="kpi-num">{median_exp:.1f} năm</div><div class="kpi-sub">Mức phổ biến</div></div>', unsafe_allow_html=True)
+for col, lbl, val, sub in [
+    (c1, "Tin tuyển dụng", f"{len(filtered):,}", f"Tổng nguồn: {len(rows):,}"),
+    (c2, "Tỉnh / Thành VN", f"{prov_cnt}", "Phạm vi Việt Nam"),
+    (c3, "Lương trung vị", f"{med_sal/1e6:.1f}M", f"{med_sal:,.0f} đ"),
+    (c4, "Kỹ năng dẫn đầu", top_sk, top_sk_sub),
+    (c5, "Kinh nghiệm", f"{med_exp:.1f} năm", "Trung vị"),
+]:
+    col.markdown(
+        f'<div class="stat-cell"><div class="stat-label">{lbl}</div><div class="stat-main">{val}</div><div class="stat-sub">{sub}</div></div>',
+        unsafe_allow_html=True,
+    )
 
 st.write("")
-
 if not filtered:
-    st.warning("Không có tin tuyển dụng nào khớp với bộ lọc hiện tại.")
+    st.warning("Không có tin nào khớp với bộ lọc hiện tại.")
     st.stop()
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📈 Kỹ năng theo vị trí & Lương",
-    "🗺️ Tỉnh / Thành Việt Nam",
-    "⏳ Dự báo & MAE",
-    "🗂️ Dữ liệu & Xuất CSV",
-])
+t1, t2, t3, t4 = st.tabs(["Kỹ năng & Lương", "Tỉnh / Thành VN", "Dự báo & MAE", "Dữ liệu & CSV"])
 
-with tab1:
-    col_l, col_r = st.columns(2)
-    with col_l:
-        st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-        st.markdown("#### Nhóm vị trí đang tìm kiếm cần những kỹ năng nào?")
-        available_role_groups = sorted({r.get("role_group", "Khác") for r in filtered if r.get("role_group")})
-        role_chart_choices = ["Tất cả nhóm vị trí (đang lọc)"] + available_role_groups
-        default_idx = 0
-        if selected_role != "Tất cả" and selected_role in available_role_groups:
-            default_idx = available_role_groups.index(selected_role) + 1
+with t1:
+    l_col, r_col = st.columns(2)
+    with l_col:
+        st.markdown("#### Nhóm vị trí tìm kiếm cần những kỹ năng nào?")
+        avail_roles = sorted({r["role_group"] for r in filtered})
+        role_choices = ["Tất cả nhóm vị trí"] + avail_roles
+        def_idx = (avail_roles.index(sel_role) + 1) if sel_role in avail_roles else 0
+        chosen_role = st.selectbox("Chọn nhóm vị trí", role_choices, index=def_idx)
 
-        chosen_role_for_skills = st.selectbox(
-            "Chọn nhóm vị trí để xem kỹ năng cần có",
-            role_chart_choices,
-            index=default_idx,
-            key="role_skill_selector",
-        )
-
-        role_subset = (
-            filtered
-            if chosen_role_for_skills == "Tất cả nhóm vị trí (đang lọc)"
-            else [r for r in filtered if r.get("role_group") == chosen_role_for_skills]
-        )
-
-        role_skill_counts = {}
-        for col in skill_cols:
-            cnt = 0
-            for r in role_subset:
-                try:
-                    cnt += int(float(r.get(col) or 0))
-                except Exception:
-                    pass
-            role_skill_counts[skill_name_map[col]] = cnt
-
-        sorted_role_skills = dict(sorted(role_skill_counts.items(), key=lambda x: x[1], reverse=True))
-        top_req_skills = [f"{k} ({round(v / len(role_subset) * 100)}%)" for k, v in list(sorted_role_skills.items())[:3] if v > 0 and len(role_subset) > 0]
-        req_summary = ", ".join(top_req_skills) if top_req_skills else "Chưa nổi bật kỹ năng cụ thể"
-
+        subset = filtered if chosen_role == "Tất cả nhóm vị trí" else [r for r in filtered if r["role_group"] == chosen_role]
+        r_skills = {
+            skill_map[c]: sum(int(float(r.get(c, 0) or 0)) for r in subset)
+            for c in skill_cols
+        }
+        r_skills = dict(sorted(r_skills.items(), key=lambda x: x[1], reverse=True))
+        top3 = [f"{k} ({round(v/len(subset)*100)}%)" for k, v in list(r_skills.items())[:3] if v > 0 and subset]
         st.markdown(
-            f'<div class="helper-hint"><b>{chosen_role_for_skills}</b> ({len(role_subset)} tin): Kỹ năng thường cần nhất là <b>{req_summary}</b>. Cột thể hiện số tin trong nhóm có yêu cầu kỹ năng đó.</div>',
+            f'<div class="caption-note"><b>{chosen_role}</b> ({len(subset)} tin): nổi bật <b>{", ".join(top3) if top3 else "chưa rõ"}</b> · mã hóa 1 = có nhắc kỹ năng, 0 = không.</div>',
             unsafe_allow_html=True,
         )
-        st.bar_chart(sorted_role_skills, color="#2563eb", height=275)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.bar_chart(r_skills, color="#0284c7", height=275)
 
-    with col_r:
-        st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-        st.markdown("#### Mức lương trung vị theo nhóm vị trí (VNĐ)")
+    with r_col:
+        st.markdown("#### Mức lương trung vị theo nhóm vị trí")
         st.markdown(
-            '<div class="helper-hint"><b>Cách hiểu:</b> Lương trung vị là mức lương nằm ở giữa dãy lương của nhóm vị trí, ít bị kéo lệch bởi vài tin lương quá cao hoặc quá thấp.</div>',
+            '<div class="caption-note">Dùng trung vị thay cho trung bình để hạn chế ảnh hưởng của các tin lương ngoại lai.</div>',
             unsafe_allow_html=True,
         )
-        role_sal_map = {}
-        for role in sorted({r.get("role_group", "Khác") for r in filtered}):
-            vals = [r["salary_val"] for r in filtered if r.get("role_group") == role and r["salary_val"] > 0]
+        sal_by_role = {}
+        for rg in sorted({r["role_group"] for r in filtered}):
+            vals = [r["salary_val"] for r in filtered if r["role_group"] == rg and r["salary_val"] > 0]
             if vals:
-                role_sal_map[role] = round(statistics.median(vals), 0)
-        sorted_role_sal = dict(sorted(role_sal_map.items(), key=lambda x: x[1], reverse=True))
-        st.bar_chart(sorted_role_sal, color="#0d9488", height=325)
-        st.markdown('</div>', unsafe_allow_html=True)
+                sal_by_role[rg] = round(statistics.median(vals), 0)
+        st.bar_chart(dict(sorted(sal_by_role.items(), key=lambda x: x[1], reverse=True)), color="#0f766e", height=325)
 
-    st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-    st.markdown(f"#### Tỷ lệ kỹ năng cần có cho: {chosen_role_for_skills}")
-    top_items = list(sorted_role_skills.items())[:6]
-    cols_sk = st.columns(min(6, max(1, len(top_items))))
-    for idx, (sk_n, sk_c) in enumerate(top_items):
-        pct = (sk_c / len(role_subset) * 100) if len(role_subset) > 0 else 0.0
-        with cols_sk[idx]:
-            st.metric(label=f"Kỹ năng {sk_n}", value=f"{sk_c}/{len(role_subset)} tin", delta=f"{pct:.0f}% nhóm")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with tab2:
-    loc_counts = {}
-    loc_sal_lists = {}
+with t2:
+    st.markdown("#### Phân bố tin theo Tỉnh / Thành phố Việt Nam (Top 15)")
+    loc_cnt = {}
+    loc_sal = {}
     for r in filtered:
-        loc = r.get("location") or "TP. Hồ Chí Minh"
-        loc_counts[loc] = loc_counts.get(loc, 0) + 1
+        loc_cnt[r["location"]] = loc_cnt.get(r["location"], 0) + 1
         if r["salary_val"] > 0:
-            loc_sal_lists.setdefault(loc, []).append(r["salary_val"])
-
-    sorted_locs = sorted(loc_counts.items(), key=lambda x: x[1], reverse=True)
-
-    st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-    st.markdown("#### Top 15 Tỉnh / Thành phố Việt Nam nhiều tin nhất")
-    st.bar_chart(dict(sorted_locs[:15]), color="#4f46e5", height=310)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-    st.markdown("#### Bảng thống kê theo Tỉnh / Thành phố Việt Nam")
-    prov_rows = []
-    for loc, cnt in sorted_locs:
-        med_s = statistics.median(loc_sal_lists[loc]) if loc in loc_sal_lists else 0.0
-        prov_rows.append({
+            loc_sal.setdefault(r["location"], []).append(r["salary_val"])
+    s_locs = sorted(loc_cnt.items(), key=lambda x: x[1], reverse=True)
+    st.bar_chart(dict(s_locs[:15]), color="#1d4ed8", height=280)
+    st.dataframe([
+        {
             "Tỉnh / Thành phố": loc,
-            "Số tin đăng": cnt,
+            "Số tin": cnt,
             "Tỷ trọng (%)": round(cnt / len(filtered) * 100, 2),
-            "Lương trung vị (VNĐ)": int(round(med_s, 0)),
-        })
-    st.dataframe(prov_rows, use_container_width=True, height=340)
-    st.markdown('</div>', unsafe_allow_html=True)
+            "Lương trung vị (VNĐ)": int(round(statistics.median(loc_sal[loc]), 0)) if loc in loc_sal else 0,
+        }
+        for loc, cnt in s_locs
+    ], use_container_width=True, height=300)
 
-with tab3:
-    counts_by_month = {}
+with t3:
+    by_m = {}
     for r in filtered:
-        ym = r.get("year_month", "")
-        if ym:
-            counts_by_month[ym] = counts_by_month.get(ym, 0) + 1
-
-    months = sorted(counts_by_month.keys())
-    actuals = [float(counts_by_month[m]) for m in months]
+        if r.get("year_month"):
+            by_m[r["year_month"]] = by_m.get(r["year_month"], 0) + 1
+    months = sorted(by_m.keys())
+    actuals = [float(by_m[m]) for m in months]
     n = len(months)
 
     if n >= 4:
-        test_periods = min(3, n - 2)
-        split_idx = max(1, n - test_periods)
-        ts_x = list(range(split_idx))
-        ts_y = actuals[:split_idx]
-
-        if len(ts_x) >= 2 and len(set(ts_x)) > 1:
-            mx = statistics.mean(ts_x)
-            my = statistics.mean(ts_y)
-            den = sum((x - mx) ** 2 for x in ts_x)
-            slope = sum((x - mx) * (y - my) for x, y in zip(ts_x, ts_y)) / den if den else 0.0
+        split = max(1, n - min(3, n - 2))
+        xs, ys = list(range(split)), actuals[:split]
+        if len(xs) >= 2 and len(set(xs)) > 1:
+            mx, my = statistics.mean(xs), statistics.mean(ys)
+            den = sum((x - mx) ** 2 for x in xs)
+            slope = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / den if den else 0.0
             intercept = my - slope * mx
         else:
-            slope = 0.0
-            intercept = statistics.mean(ts_y)
+            slope, intercept = 0.0, statistics.mean(ys)
 
         preds = [max(0.0, round(intercept + slope * i)) for i in range(n)]
         baselines = [None] + [actuals[i - 1] for i in range(1, n)]
-        abs_errors = [abs(actuals[i] - preds[i]) for i in range(n)]
+        errs = [abs(actuals[i] - preds[i]) for i in range(n)]
+        ev = [i for i in range(split, n) if baselines[i] is not None]
 
-        eval_idx = [i for i in range(split_idx, n) if baselines[i] is not None]
-        if eval_idx:
-            mae_base = statistics.mean(abs(actuals[i] - baselines[i]) for i in eval_idx)
-            mae_model = statistics.mean(abs(actuals[i] - preds[i]) for i in eval_idx)
-            rmse_model = (statistics.mean((actuals[i] - preds[i]) ** 2 for i in eval_idx)) ** 0.5
+        mae_b = statistics.mean(abs(actuals[i] - baselines[i]) for i in ev) if ev else 0.0
+        mae_m = statistics.mean(abs(actuals[i] - preds[i]) for i in ev) if ev else 0.0
+        rmse_m = (statistics.mean((actuals[i] - preds[i]) ** 2 for i in ev)) ** 0.5 if ev else 0.0
 
-            m1, m2, m3 = st.columns(3)
-            with m1:
-                st.markdown(f'<div class="kpi-box"><div class="kpi-title">MAE Baseline (Kỳ trước)</div><div class="kpi-num">{mae_base:.2f}</div><div class="kpi-sub">Sai số tuyệt đối trung bình</div></div>', unsafe_allow_html=True)
-            with m2:
-                st.markdown(f'<div class="kpi-box green"><div class="kpi-title">MAE Mô hình xu hướng</div><div class="kpi-num">{mae_model:.2f}</div><div class="kpi-sub">So với Baseline kỳ trước</div></div>', unsafe_allow_html=True)
-            with m3:
-                st.markdown(f'<div class="kpi-box amber"><div class="kpi-title">RMSE Mô hình</div><div class="kpi-num">{rmse_model:.2f}</div><div class="kpi-sub">Căn bậc hai sai số bình phương</div></div>', unsafe_allow_html=True)
+        m1, m2, m3 = st.columns(3)
+        m1.metric("MAE Baseline (kỳ trước)", f"{mae_b:.2f}")
+        m2.metric("MAE Mô hình xu hướng", f"{mae_m:.2f}")
+        m3.metric("RMSE Mô hình", f"{rmse_m:.2f}")
 
-        st.write("")
-        st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-        st.markdown("#### Xu hướng số tin theo tháng: Thực tế vs. Dự báo mô hình")
-        st.line_chart(
+        st.line_chart({
+            "Thực tế": {months[i]: actuals[i] for i in range(n)},
+            "Dự báo": {months[i]: preds[i] for i in range(n)},
+        }, height=280)
+        st.dataframe([
             {
-                "Thực tế": {months[i]: actuals[i] for i in range(n)},
-                "Dự báo mô hình": {months[i]: preds[i] for i in range(n)},
-            },
-            height=300,
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-        st.markdown("#### Bảng chi tiết theo tháng & Sai số")
-        table_rows = []
-        for i, m in enumerate(months):
-            table_rows.append({
-                "Tháng": m,
-                "Thực tế (tin)": int(actuals[i]),
+                "Tháng": months[i],
+                "Thực tế": int(actuals[i]),
                 "Baseline kỳ trước": int(baselines[i]) if baselines[i] is not None else None,
-                "Dự báo mô hình": int(preds[i]),
-                "Sai số tuyệt đối": int(abs_errors[i]),
-            })
-        st.dataframe(table_rows, use_container_width=True)
-
-        worst_idx = max(range(n), key=lambda i: abs_errors[i])
+                "Dự báo": int(preds[i]),
+                "Sai số tuyệt đối": int(errs[i]),
+            }
+            for i in range(n)
+        ], use_container_width=True)
+        w_i = max(range(n), key=lambda i: errs[i])
         st.markdown(
-            f"""
-            <div class="note-box">
-                <b>Phân tích lỗi (Error Analysis):</b> Tháng có sai số lớn nhất là <b>{months[worst_idx]}</b>
-                (lệch <b>{int(abs_errors[worst_idx])}</b> tin). Mô hình xu hướng tuyến tính cơ bản dễ sai lệch ở các
-                tháng biến động mùa vụ hoặc dịp lễ/Tết khi lượng tin giảm/tăng đột ngột; đây là hạn chế đã biết của mô hình.
-            </div>
-            """,
+            f'<div class="caption-note"><b>Phân tích lỗi:</b> Tháng lệch lớn nhất là <b>{months[w_i]}</b> ({int(errs[w_i])} tin) do biến động mùa vụ/lễ Tết; mô hình xu hướng tuyến tính cơ bản chưa bắt được cú hích mùa vụ đột ngột.</div>',
             unsafe_allow_html=True,
         )
-        st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.info(
-            f"Hiện có {n} mốc tháng trong tập dữ liệu lọc (cần ít nhất 4 mốc tháng để đánh giá xu hướng & MAE). "
-            "Dùng chế độ File mẫu Offline Việt Nam (12 tháng) để xem đầy đủ biểu đồ chuỗi thời gian và MAE."
-        )
+        st.info(f"Có {n} mốc tháng (cần tối thiểu 4 tháng để đánh giá MAE). Hãy dùng chế độ Dữ liệu mẫu Offline để xem đầy đủ.")
 
-with tab4:
-    st.markdown('<div class="card-panel">', unsafe_allow_html=True)
-    st.markdown("#### Bảng dữ liệu đặc trưng tỉnh/thành Việt Nam sau khi lọc")
-    display_cols = [
-        "job_id", "posted_date", "year_month", "title", "role_group",
-        "location", "experience_years", "salary_avg", *skill_cols,
-    ]
-    clean_table = [{k: r.get(k, "") for k in display_cols} for r in filtered]
-    st.dataframe(clean_table, use_container_width=True, height=350)
+with t4:
+    cols = ["job_id", "posted_date", "year_month", "title", "role_group", "location", "experience_years", "salary_avg", "source", "source_url", *skill_cols]
+    tbl = [{k: r.get(k, "") for k in cols} for r in filtered]
+    st.dataframe(tbl, use_container_width=True, height=320)
 
-    csv_buffer = ["\ufeff" + ",".join(display_cols)]
-    for item in clean_table:
-        escaped = []
-        for col in display_cols:
-            val = str(item.get(col, "")).replace('"', '""')
-            escaped.append(f'"{val}"' if ("," in val or '"' in val or "\n" in val) else val)
-        csv_buffer.append(",".join(escaped))
-
-    st.download_button(
-        label="⬇️ Tải dữ liệu đã lọc (.csv)",
-        data="\n".join(csv_buffer).encode("utf-8"),
-        file_name="jobs_vietnam_filtered.csv",
-        mime="text/csv",
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
+    csv_lines = ["\ufeff" + ",".join(cols)]
+    for item in tbl:
+        csv_lines.append(",".join(
+            f'"{str(item.get(c, "")).replace(chr(34), chr(34)*2)}"'
+            if ("," in str(item.get(c, "")) or '"' in str(item.get(c, "")))
+            else str(item.get(c, ""))
+            for c in cols
+        ))
+    st.download_button("Tải CSV", data="\n".join(csv_lines).encode("utf-8"), file_name="jobs_vn.csv", mime="text/csv")
