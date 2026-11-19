@@ -1,0 +1,28 @@
+﻿job_id,posted_date,year_month,title,role_group,location,experience_years,salary_avg,skill_python,skill_sql,skill_java,skill_javascript,skill_pandas_numpy,skill_docker,skill_git,skill_aws_cloud
+1,2026-01-05,2026-01,Python Backend Developer,Backend,TP.HCM,2,21500000.0,1,1,0,0,0,1,1,0
+2,2026-01-12,2026-01,Data Analyst,Data / BI,TP.HCM,1,17000000.0,1,1,0,0,1,0,0,0
+3,2026-01-18,2026-01,Frontend React Developer,Frontend,Hà Nội,2,19000000.0,0,0,0,1,0,0,1,0
+4,2026-01-24,2026-01,Java Software Engineer,Backend,TP.HCM,3,27000000.0,0,1,1,0,0,1,0,1
+5,2026-02-08,2026-02,Junior Data Scientist,Data / BI,TP.HCM,1,18000000.0,1,1,0,0,1,0,0,0
+6,2026-02-19,2026-02,QA Automation Engineer,QA / Tester,Đà Nẵng,2,15500000.0,1,0,1,0,0,0,1,0
+7,2026-03-03,2026-03,Senior Backend Engineer,Backend,TP.HCM,4,34000000.0,1,1,1,0,0,1,1,1
+8,2026-03-09,2026-03,Data Engineer,Data / BI,Hà Nội,2,24000000.0,1,1,0,0,1,0,0,1
+9,2026-03-15,2026-03,Frontend Developer,Frontend,TP.HCM,1,15000000.0,0,0,0,1,0,0,1,0
+10,2026-03-21,2026-03,Backend Python Developer,Backend,TP.HCM,2,22500000.0,1,1,0,0,0,1,1,0
+11,2026-03-27,2026-03,BI Data Analyst,Data / BI,TP.HCM,2,19500000.0,1,1,0,0,1,0,0,0
+12,2026-04-04,2026-04,Java Backend Developer,Backend,Hà Nội,3,27000000.0,0,1,1,0,0,1,1,0
+13,2026-04-10,2026-04,Data Scientist,Data / BI,TP.HCM,2,25500000.0,1,1,0,0,1,0,0,1
+14,2026-04-16,2026-04,Fullstack JS Developer,Other IT,TP.HCM,2,21500000.0,0,1,0,1,0,1,1,0
+15,2026-04-22,2026-04,QA Tester,QA / Tester,Hà Nội,1,13000000.0,0,1,0,0,0,0,1,0
+16,2026-04-28,2026-04,Python Data Analyst,Data / BI,TP.HCM,1,16500000.0,1,1,0,0,1,0,0,0
+17,2026-05-05,2026-05,Backend Engineer,Backend,TP.HCM,3,29000000.0,1,1,1,0,0,1,1,1
+18,2026-05-11,2026-05,Data Analyst,Data / BI,TP.HCM,2,20500000.0,1,1,0,0,1,0,0,0
+19,2026-05-17,2026-05,Frontend Engineer,Frontend,Hà Nội,2,19000000.0,0,0,0,1,0,0,1,0
+20,2026-05-23,2026-05,Cloud Backend Developer,Backend,TP.HCM,3,30000000.0,1,1,0,0,0,1,1,1
+21,2026-05-29,2026-05,Data Engineer,Data / BI,TP.HCM,3,30500000.0,1,1,0,0,1,1,0,1
+22,2026-06-03,2026-06,Senior Python Developer,Backend,TP.HCM,4,36000000.0,1,1,0,0,0,1,1,1
+23,2026-06-08,2026-06,Java Developer,Backend,TP.HCM,2,23500000.0,0,1,1,0,0,0,1,0
+24,2026-06-14,2026-06,Data Analyst,Data / BI,Hà Nội,1,17500000.0,1,1,0,0,1,0,0,0
+25,2026-06-19,2026-06,Frontend ReactJS,Frontend,TP.HCM,2,20000000.0,0,0,0,1,0,0,1,0
+26,2026-06-24,2026-06,Backend Node/Python,Backend,TP.HCM,2,22500000.0,1,1,0,1,0,1,1,0
+27,2026-06-29,2026-06,Data Scientist,Data / BI,TP.HCM,3,32000000.0,1,1,0,0,1,1,0,1
